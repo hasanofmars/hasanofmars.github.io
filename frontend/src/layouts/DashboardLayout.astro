@@ -1,0 +1,300 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} | Dashboard - M Hasan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="dash-layout">
+      <!-- Sidebar -->
+      <aside class="dash-sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <a href="/dashboard" class="sidebar-logo">
+            <span class="logo-bracket">&lt;</span>
+            <span class="logo-name">MH</span>
+            <span class="logo-bracket">/&gt;</span>
+          </a>
+        </div>
+        <nav class="sidebar-nav">
+          <a href="/dashboard" class="sidebar-link" data-page="overview">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            Overview
+          </a>
+          <a href="/dashboard/homepage" class="sidebar-link" data-page="homepage">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Homepage
+          </a>
+          <a href="/dashboard/projects" class="sidebar-link" data-page="projects">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+            Projects
+          </a>
+          <a href="/dashboard/services" class="sidebar-link" data-page="services">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+            Services
+          </a>
+          <a href="/dashboard/upload-avatar" class="sidebar-link" data-page="upload-avatar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Avatar
+          </a>
+          <a href="/dashboard/settings" class="sidebar-link" data-page="settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+            Settings
+          </a>
+        </nav>
+        <div class="sidebar-footer">
+          <a href="/" class="sidebar-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            View Site
+          </a>
+          <button class="sidebar-link logout-btn" id="logoutBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Logout
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="dash-main">
+        <header class="dash-topbar">
+          <button class="sidebar-toggle" id="sidebarToggle">
+            <span></span><span></span><span></span>
+          </button>
+          <div class="topbar-right">
+            <div class="topbar-user">
+              <img src="/images/profile.jpg" alt="MH" class="topbar-avatar" />
+              <span>M Hasan</span>
+            </div>
+          </div>
+        </header>
+        <div class="dash-content">
+          <slot />
+        </div>
+      </main>
+    </div>
+
+    <style>
+      :root {
+        --sidebar-width: 260px;
+      }
+
+      .dash-layout {
+        display: flex;
+        min-height: 100vh;
+        background: var(--bg-primary);
+      }
+
+      /* ===== Sidebar ===== */
+      .dash-sidebar {
+        width: var(--sidebar-width);
+        background: var(--bg-secondary);
+        border-right: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 100;
+        transition: transform 0.3s ease;
+      }
+
+      .sidebar-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .sidebar-logo {
+        font-family: var(--font-mono);
+        font-size: 1.3rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 2px;
+      }
+
+      .sidebar-logo .logo-bracket { color: var(--accent-green); }
+      .sidebar-logo .logo-name {
+        background: var(--gradient-main);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .sidebar-nav {
+        flex: 1;
+        padding: 16px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: var(--radius-sm);
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: var(--transition);
+        text-decoration: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        text-align: left;
+        font-family: var(--font-sans);
+      }
+
+      .sidebar-link svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+      }
+
+      .sidebar-link:hover {
+        background: rgba(0, 255, 65, 0.05);
+        color: var(--accent-green);
+      }
+
+      .sidebar-link.active {
+        background: rgba(0, 255, 65, 0.1);
+        color: var(--accent-green);
+        border: 1px solid rgba(0, 255, 65, 0.2);
+      }
+
+      .sidebar-footer {
+        padding: 12px;
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .logout-btn:hover {
+        color: var(--accent-red) !important;
+        background: rgba(255, 71, 87, 0.05) !important;
+      }
+
+      /* ===== Main ===== */
+      .dash-main {
+        flex: 1;
+        margin-left: var(--sidebar-width);
+        min-height: 100vh;
+      }
+
+      .dash-topbar {
+        height: 64px;
+        background: var(--bg-secondary);
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+
+      .sidebar-toggle {
+        display: none;
+        flex-direction: column;
+        gap: 4px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+      }
+
+      .sidebar-toggle span {
+        width: 22px;
+        height: 2px;
+        background: var(--text-primary);
+        border-radius: 2px;
+        transition: var(--transition);
+      }
+
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .topbar-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.9rem;
+        color: var(--text-primary);
+      }
+
+      .topbar-avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .dash-content {
+        padding: 32px 28px;
+      }
+
+      @media (max-width: 768px) {
+        .dash-sidebar {
+          transform: translateX(-100%);
+        }
+        .dash-sidebar.open {
+          transform: translateX(0);
+        }
+        .dash-main {
+          margin-left: 0;
+        }
+        .sidebar-toggle {
+          display: flex;
+        }
+      }
+    </style>
+
+    <script>
+      // Sidebar toggle
+      document.getElementById('sidebarToggle')?.addEventListener('click', () => {
+        document.getElementById('sidebar').classList.toggle('open');
+      });
+
+      // Logout
+      document.getElementById('logoutBtn')?.addEventListener('click', () => {
+        localStorage.removeItem('token');
+        window.location.href = '/dashboard/login';
+      });
+
+      // Active link
+      const currentPath = window.location.pathname;
+      document.querySelectorAll('.sidebar-link[data-page]').forEach(link => {
+        if (link.getAttribute('href') === currentPath) {
+          link.classList.add('active');
+        }
+      });
+
+      // Auth check
+      const token = localStorage.getItem('token');
+      if (!token && !window.location.pathname.includes('/login')) {
+        window.location.href = '/dashboard/login';
+      }
+    </script>
+  </body>
+</html>

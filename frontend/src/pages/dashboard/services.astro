@@ -1,0 +1,146 @@
+---
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+---
+
+<DashboardLayout title="Services">
+  <div class="dash-header">
+    <h1>Manage <span class="gradient-text">Services</span></h1>
+    <p>Add, edit, or remove services shown on the homepage</p>
+  </div>
+
+  <div class="form-card">
+    <form id="serviceForm" class="dash-form">
+      <input type="hidden" id="editId" value="" />
+      <div class="form-row">
+        <div class="form-group">
+          <label for="service_title">Title *</label>
+          <input type="text" id="service_title" placeholder="e.g., Web Development" required />
+        </div>
+        <div class="form-group">
+          <label for="service_icon">Icon</label>
+          <select id="service_icon">
+            <option value="code">Code / Development</option>
+            <option value="shield">Shield / Security</option>
+            <option value="tool">Tool / Consulting</option>
+            <option value="cloud">Cloud / DevOps</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="service_desc">Description</label>
+        <textarea id="service_desc" rows="3" placeholder="Service description..."></textarea>
+      </div>
+      <div class="form-group">
+        <label for="service_order">Display Order</label>
+        <input type="number" id="service_order" value="1" min="1" max="100" />
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="submitBtn">Add Service</button>
+        <button type="button" class="btn btn-outline" id="cancelBtn" style="display:none;">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="dash-table-wrapper">
+    <h2 class="section-label">All Services</h2>
+    <div class="dash-table-container">
+      <table class="dash-table" id="servicesTable">
+        <thead><tr><th>Order</th><th>Title</th><th>Description</th><th>Icon</th><th>Actions</th></tr></thead>
+        <tbody id="servicesBody"><tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:40px;">Loading services...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</DashboardLayout>
+
+<style>
+  .dash-header { margin-bottom: 28px; }
+  .dash-header h1 { font-size: 2rem; margin-bottom: 8px; }
+  .dash-header p { color: var(--text-secondary); font-family: var(--font-mono); font-size: 0.9rem; }
+  .form-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 28px; margin-bottom: 36px; }
+  .form-card-header { margin-bottom: 24px; }
+  .form-card-header h2 { font-size: 1.2rem; }
+  .dash-form .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .dash-form .form-group { margin-bottom: 16px; }
+  .form-actions { display: flex; gap: 12px; margin-top: 8px; }
+  .section-label { font-size: 1.1rem; color: var(--text-primary); margin-bottom: 16px; font-family: var(--font-mono); }
+  .dash-table-container { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow-x: auto; }
+  .dash-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  .dash-table th { padding: 14px 20px; text-align: left; font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); font-weight: 600; border-bottom: 1px solid var(--border-color); background: var(--bg-secondary); }
+  .dash-table td { padding: 14px 20px; border-bottom: 1px solid var(--border-color); color: var(--text-primary); }
+  .dash-table tr:last-child td { border-bottom: none; }
+  .dash-table tr:hover td { background: rgba(0,255,65,0.02); }
+  .table-actions { display: flex; gap: 8px; }
+  .table-actions button { padding: 6px 14px; font-size: 0.75rem; border-radius: var(--radius-sm); border: none; cursor: pointer; font-weight: 600; transition: var(--transition); font-family: var(--font-mono); }
+  .btn-edit { background: rgba(0,212,255,0.1); color: var(--accent-cyan); border: 1px solid rgba(0,212,255,0.2) !important; }
+  .btn-edit:hover { background: rgba(0,212,255,0.2); }
+  .btn-delete { background: rgba(255,71,87,0.1); color: var(--accent-red); border: 1px solid rgba(255,71,87,0.2) !important; }
+  .btn-delete:hover { background: rgba(255,71,87,0.2); }
+  @media (max-width: 768px) { .dash-form .form-row { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  const API = window.API_BASE || 'http://localhost:8000';
+  const token = localStorage.getItem('token');
+  const headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
+
+  const form = document.getElementById('serviceForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const cancelBtn = document.getElementById('cancelBtn');
+  const editId = document.getElementById('editId');
+  const tbody = document.getElementById('servicesBody');
+
+  async function loadServices() {
+    try {
+      const res = await fetch(`${API}/api/services/`);
+      const data = await res.json();
+      if (!Array.isArray(data)) throw new Error('Invalid');
+      if (data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:40px;">No services yet.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.map(s => `<tr><td>${s.order}</td><td><strong>${s.title}</strong></td><td style="color:var(--text-secondary);font-size:0.85rem;">${s.description || ''}</td><td><span style="font-family:var(--font-mono);font-size:0.8rem;color:var(--accent-cyan);">${s.icon}</span></td><td><div class="table-actions"><button class="btn-edit" onclick='editService("${s.id}","${s.title.replace(/"/g,'&quot;')}","${(s.description||'').replace(/"/g,'&quot;')}","${s.icon}","${s.order}")'>Edit</button><button class="btn-delete" onclick="deleteService('${s.id}')">Delete</button></div></td></tr>`).join('');
+    } catch { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:40px;">Cannot load services.</td></tr>'; }
+  }
+
+  window.editService = (id, title, desc, icon, order) => {
+    editId.value = id;
+    document.getElementById('service_title').value = title;
+    document.getElementById('service_desc').value = desc;
+    document.getElementById('service_icon').value = icon;
+    document.getElementById('service_order').value = order;
+    submitBtn.textContent = 'Update Service';
+    cancelBtn.style.display = 'inline-flex';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  cancelBtn.addEventListener('click', () => { form.reset(); editId.value = ''; submitBtn.textContent = 'Add Service'; cancelBtn.style.display = 'none'; });
+
+  window.deleteService = async (id) => {
+    if (!confirm('Delete this service?')) return;
+    try {
+      const res = await fetch(`${API}/api/services/${id}`, { method: 'DELETE', headers });
+      if (res.ok) loadServices();
+      else alert('Delete failed');
+    } catch { alert('Server unavailable'); }
+  };
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const payload = {
+      title: document.getElementById('service_title').value,
+      description: document.getElementById('service_desc').value,
+      icon: document.getElementById('service_icon').value,
+      order: parseInt(document.getElementById('service_order').value) || 1,
+    };
+    const isEdit = editId.value !== '';
+    try {
+      const url = isEdit ? `${API}/api/services/${editId.value}` : `${API}/api/services/`;
+      const method = isEdit ? 'PUT' : 'POST';
+      const res = await fetch(url, { method, headers, body: JSON.stringify(payload) });
+      if (res.ok) { form.reset(); editId.value = ''; submitBtn.textContent = 'Add Service'; cancelBtn.style.display = 'none'; loadServices(); }
+      else { const err = await res.json(); alert('Error: ' + (err.detail || 'Unknown')); }
+    } catch { alert('Cannot connect to server'); }
+  });
+
+  loadServices();
+</script>

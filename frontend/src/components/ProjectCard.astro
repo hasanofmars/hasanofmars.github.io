@@ -1,0 +1,131 @@
+---
+export interface Props {
+  title: string;
+  description: string;
+  techStack?: string;
+  liveUrl?: string;
+  githubUrl?: string;
+  category?: string;
+  featured?: boolean;
+  index?: number;
+}
+
+const { title, description, techStack, liveUrl, githubUrl, category, featured, index = 0 } = Astro.props;
+const techs = techStack ? techStack.split(',').map(t => t.trim()) : [];
+const delay = index * 0.1;
+---
+
+<article class="project-card" style={`animation-delay: ${delay}s`}>
+  {featured && <span class="featured-badge">✦ Featured</span>}
+  {category && <span class="category-badge">{category}</span>}
+  <div class="card-glow"></div>
+  <div class="card-content">
+    <h3 class="card-title">{title}</h3>
+    <p class="card-desc">{description}</p>
+    {techs.length > 0 && (
+      <div class="tech-stack">
+        {techs.map(tech => <span class="tech-tag">{tech}</span>)}
+      </div>
+    )}
+    <div class="card-actions">
+      {liveUrl && <a href={liveUrl} target="_blank" rel="noopener" class="btn btn-primary btn-small">Live Demo</a>}
+      {githubUrl && <a href={githubUrl} target="_blank" rel="noopener" class="btn btn-outline btn-small">GitHub</a>}
+    </div>
+  </div>
+</article>
+
+<style>
+  .project-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition);
+    opacity: 0;
+    animation: fadeInUp 0.6s ease forwards;
+  }
+
+  .project-card:hover {
+    border-color: var(--accent-green);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-green);
+    background: var(--bg-card-hover);
+  }
+
+  .card-glow {
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(0, 255, 65, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+    transition: var(--transition);
+  }
+
+  .project-card:hover .card-glow {
+    opacity: 1;
+  }
+
+  .featured-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--gradient-main);
+    color: var(--bg-primary);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-family: var(--font-mono);
+  }
+
+  .category-badge {
+    display: inline-block;
+    background: rgba(0, 212, 255, 0.1);
+    color: var(--accent-cyan);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-family: var(--font-mono);
+    margin-bottom: 12px;
+  }
+
+  .card-title {
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+  }
+
+  .card-desc {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .tech-tag {
+    background: rgba(0, 255, 65, 0.08);
+    color: var(--accent-green);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 4px 12px;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 255, 65, 0.15);
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 12px;
+  }
+</style>

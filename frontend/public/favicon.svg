@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="16" fill="#0a0e17"/>
+  <path d="M30 25 L50 15 L70 25 L70 55 Q70 75 50 85 Q30 75 30 55Z" fill="none" stroke="#00ff41" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M38 40 L50 32 L62 40 L62 55 Q62 67 50 73 Q38 67 38 55Z" fill="none" stroke="#00d4ff" stroke-width="3" stroke-linejoin="round"/>
+  <circle cx="50" cy="48" r="4" fill="#00ff41"/>
+  <text x="50" y="92" text-anchor="middle" font-family="monospace" font-size="10" font-weight="bold" fill="#00ff41">MH</text>
+</svg>

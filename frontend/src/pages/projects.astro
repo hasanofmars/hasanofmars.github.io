@@ -1,0 +1,141 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+
+const allProjects = [
+  { title: 'NetShield Pro', description: 'Enterprise-grade network security scanner with real-time threat detection and automated incident response system.', techStack: 'Python,Scapy,MongoDB,Docker', liveUrl: '#', githubUrl: '#', category: 'Cybersecurity', featured: true },
+  { title: 'SecureVault Cloud', description: 'End-to-end encrypted cloud storage with zero-knowledge architecture, file integrity monitoring, and secure sharing.', techStack: 'React,Node.js,AES-256,PostgreSQL', liveUrl: '#', githubUrl: '#', category: 'Security', featured: true },
+  { title: 'WebDefender WAF', description: 'AI-powered web application firewall with DDoS mitigation, bot detection, and real-time traffic analysis.', techStack: 'FastAPI,Redis,TensorFlow,Nginx', liveUrl: '#', githubUrl: '#', category: 'Cybersecurity', featured: true },
+  { title: 'BugTracker Pro', description: 'Advanced bug tracking and project management platform with sprint planning and team collaboration tools.', techStack: 'React,Django,PostgreSQL,Docker', liveUrl: '#', githubUrl: '#', category: 'Web App' },
+  { title: 'PortScan Analyzer', description: 'High-performance port scanning and service discovery tool with detailed reporting and vulnerability correlation.', techStack: 'Python,Asyncio,PostgreSQL,Redis', liveUrl: '#', githubUrl: '#', category: 'Security Tool' },
+  { title: 'E-Commerce Platform', description: 'Full-featured e-commerce platform with payment gateway integration, inventory management, and analytics dashboard.', techStack: 'Next.js,FastAPI,MongoDB,Stripe', liveUrl: '#', githubUrl: '#', category: 'Web App' },
+  { title: 'LogWatch SIEM', description: 'Security information and event management system with real-time log analysis, alerting, and compliance reporting.', techStack: 'Python,Elasticsearch,Kibana,Docker', liveUrl: '#', githubUrl: '#', category: 'Security' },
+  { title: 'DevOps Pipeline', description: 'Automated CI/CD pipeline with security scanning, container orchestration, and infrastructure as code.', techStack: 'GitHub Actions,Docker,K8s,Terraform', liveUrl: '#', githubUrl: '#', category: 'DevOps' },
+];
+---
+
+<Layout title="Projects">
+  <Navbar />
+
+  <section class="page-header">
+    <div class="container">
+      <h1 class="page-title">My <span class="gradient-text">Projects</span></h1>
+      <p class="page-desc">A collection of security tools, web applications, and open-source contributions</p>
+    </div>
+  </section>
+
+  <!-- Filter Tabs -->
+  <section class="section projects-section">
+    <div class="container">
+      <div class="filter-tabs" id="filterTabs">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="Cybersecurity">Cybersecurity</button>
+        <button class="filter-btn" data-filter="Security">Security</button>
+        <button class="filter-btn" data-filter="Web App">Web Apps</button>
+        <button class="filter-btn" data-filter="DevOps">DevOps</button>
+      </div>
+
+      <div class="projects-grid" id="projectsGrid">
+        {allProjects.map((p, i) => (
+          <div class="project-wrapper" data-category={p.category}>
+            <ProjectCard {...p} index={i} />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>
+
+<style>
+  .page-header {
+    padding: 160px 0 60px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .page-title {
+    font-size: 3rem;
+    margin-bottom: 12px;
+  }
+
+  .page-desc {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    max-width: 500px;
+  }
+
+  .filter-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    padding: 10px 22px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+
+  .filter-btn:hover {
+    border-color: var(--accent-green);
+    color: var(--accent-green);
+  }
+
+  .filter-btn.active {
+    background: var(--accent-green);
+    color: var(--bg-primary);
+    border-color: var(--accent-green);
+    font-weight: 700;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 24px;
+  }
+
+  .project-wrapper {
+    transition: var(--transition);
+  }
+
+  @media (max-width: 768px) {
+    .page-title { font-size: 2.2rem; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .filter-tabs { justify-content: center; }
+  }
+</style>
+
+<script>
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const projectWrappers = document.querySelectorAll('.project-wrapper');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const filter = btn.dataset.filter;
+      projectWrappers.forEach(wrapper => {
+        if (filter === 'all' || wrapper.dataset.category === filter) {
+          wrapper.style.display = 'block';
+          wrapper.style.animation = 'none';
+          wrapper.offsetHeight; // trigger reflow
+          wrapper.style.animation = 'fadeInUp 0.4s ease forwards';
+        } else {
+          wrapper.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>

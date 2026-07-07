@@ -1,0 +1,221 @@
+---
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+---
+
+<DashboardLayout title="Settings">
+  <div class="dash-header">
+    <h1>Profile <span class="gradient-text">Settings</span></h1>
+    <p>Manage your portfolio profile information</p>
+  </div>
+
+  <!-- Profile Form -->
+  <div class="form-card">
+    <form id="profileForm" class="dash-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" placeholder="M Hasan" />
+        </div>
+        <div class="form-group">
+          <label for="title">Professional Title</label>
+          <input type="text" id="title" placeholder="Full Stack Developer & Cybersecurity Expert" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="location">Location</label>
+          <input type="text" id="location" placeholder="Dhaka, Bangladesh" />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="mhasan@security.dev" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="bio">Bio</label>
+        <textarea id="bio" rows="4" placeholder="Tell your story..."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="github">GitHub URL</label>
+          <input type="url" id="github" placeholder="https://github.com/mhasan" />
+        </div>
+        <div class="form-group">
+          <label for="linkedin">LinkedIn URL</label>
+          <input type="url" id="linkedin" placeholder="https://linkedin.com/in/mhasan" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="twitter">Twitter URL</label>
+          <input type="url" id="twitter" placeholder="https://twitter.com/mhasan" />
+        </div>
+        <div class="form-group">
+          <label for="website">Website</label>
+          <input type="url" id="website" placeholder="https://mhasan.dev" />
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Danger Zone -->
+  <div class="danger-card">
+    <h2>Danger Zone</h2>
+    <p>Actions here are irreversible. Proceed with caution.</p>
+    <div class="danger-actions">
+      <div class="danger-item">
+        <div>
+          <strong>Reset Portfolio Data</strong>
+          <p>Remove all projects and reset to defaults</p>
+        </div>
+        <button class="btn btn-danger btn-small" onclick="alert('This feature resets all data. Implement with caution.')">Reset</button>
+      </div>
+    </div>
+  </div>
+</DashboardLayout>
+
+<style>
+  .dash-header {
+    margin-bottom: 28px;
+  }
+  .dash-header h1 { font-size: 2rem; margin-bottom: 8px; }
+  .dash-header p { color: var(--text-secondary); font-family: var(--font-mono); font-size: 0.9rem; }
+
+  .form-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 28px;
+    margin-bottom: 36px;
+  }
+
+  .dash-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .dash-form .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-actions {
+    margin-top: 8px;
+  }
+
+  .danger-card {
+    background: rgba(255, 71, 87, 0.05);
+    border: 1px solid rgba(255, 71, 87, 0.2);
+    border-radius: var(--radius-md);
+    padding: 28px;
+  }
+
+  .danger-card h2 {
+    color: var(--accent-red);
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+
+  .danger-card > p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+  }
+
+  .danger-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    background: rgba(255, 71, 87, 0.05);
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255, 71, 87, 0.1);
+  }
+
+  .danger-item strong {
+    color: var(--text-primary);
+    font-size: 0.95rem;
+  }
+
+  .danger-item p {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin-top: 4px;
+  }
+
+  @media (max-width: 768px) {
+    .dash-form .form-row {
+      grid-template-columns: 1fr;
+    }
+    .danger-item {
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-start;
+    }
+  }
+</style>
+
+<script>
+  const API = window.API_BASE || 'http://localhost:8000';
+  const token = localStorage.getItem('token');
+  const headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
+
+  const form = document.getElementById('profileForm');
+
+  // Load profile
+  async function loadProfile() {
+    try {
+      const res = await fetch(`${API}/api/profile/`);
+      const data = await res.json();
+      if (data) {
+        document.getElementById('name').value = data.name || '';
+        document.getElementById('title').value = data.title || '';
+        document.getElementById('location').value = data.location || '';
+        document.getElementById('bio').value = data.bio || '';
+        document.getElementById('email').value = data.email || '';
+        document.getElementById('github').value = data.github || '';
+        document.getElementById('linkedin').value = data.linkedin || '';
+        document.getElementById('twitter').value = data.twitter || '';
+        document.getElementById('website').value = data.website || '';
+      }
+    } catch {
+      console.log('Could not load profile');
+    }
+  }
+
+  // Save profile
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const payload = {
+      name: document.getElementById('name').value,
+      title: document.getElementById('title').value,
+      location: document.getElementById('location').value,
+      bio: document.getElementById('bio').value,
+      email: document.getElementById('email').value,
+      github: document.getElementById('github').value,
+      linkedin: document.getElementById('linkedin').value,
+      twitter: document.getElementById('twitter').value,
+      website: document.getElementById('website').value,
+    };
+
+    try {
+      const res = await fetch(`${API}/api/profile/`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) {
+        alert('✅ Profile updated successfully!');
+      } else {
+        alert('Failed to update profile');
+      }
+    } catch {
+      alert('Cannot connect to server');
+    }
+  });
+
+  loadProfile();
+</script>
