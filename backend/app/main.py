@@ -15,26 +15,34 @@ app = FastAPI(
 @app.on_event("startup")
 def startup():
     """Auto-seed database on first run."""
-    db = get_db()
-    if db.profile.count_documents({}) == 0:
-        db.profile.insert_one(dict(DEFAULT_PROFILE))
-        db.homepage.insert_one(dict(DEFAULT_HOMEPAGE))
-        db.services.insert_many(DEFAULT_SERVICES)
-        # Seed default skills
-        skills_data = [
-            {"name": "Python", "level": 95, "category": "Backend"},
-            {"name": "JavaScript / TypeScript", "level": 90, "category": "Frontend"},
-            {"name": "React / Astro", "level": 88, "category": "Frontend"},
-            {"name": "FastAPI / Django", "level": 92, "category": "Backend"},
-            {"name": "Penetration Testing", "level": 90, "category": "Security"},
-            {"name": "Network Security", "level": 88, "category": "Security"},
-            {"name": "Web Security (OWASP)", "level": 92, "category": "Security"},
-            {"name": "Docker / Kubernetes", "level": 85, "category": "DevOps"},
-            {"name": "MongoDB / PostgreSQL", "level": 87, "category": "Database"},
-            {"name": "Cloud (AWS / Azure)", "level": 82, "category": "DevOps"},
-        ]
-        db.skills.insert_many(skills_data)
-        print("✅ Database auto-seeded with default data")
+    try:
+        db = get_db()
+        # Test connection
+        db.command("ping")
+        print("✅ MongoDB connected successfully")
+
+        if db.profile.count_documents({}) == 0:
+            db.profile.insert_one(dict(DEFAULT_PROFILE))
+            db.homepage.insert_one(dict(DEFAULT_HOMEPAGE))
+            db.services.insert_many(DEFAULT_SERVICES)
+            skills_data = [
+                {"name": "Python", "level": 95, "category": "Backend"},
+                {"name": "JavaScript / TypeScript", "level": 90, "category": "Frontend"},
+                {"name": "React / Astro", "level": 88, "category": "Frontend"},
+                {"name": "FastAPI / Django", "level": 92, "category": "Backend"},
+                {"name": "Penetration Testing", "level": 90, "category": "Security"},
+                {"name": "Network Security", "level": 88, "category": "Security"},
+                {"name": "Web Security (OWASP)", "level": 92, "category": "Security"},
+                {"name": "Docker / Kubernetes", "level": 85, "category": "DevOps"},
+                {"name": "MongoDB / PostgreSQL", "level": 87, "category": "Database"},
+                {"name": "Cloud (AWS / Azure)", "level": 82, "category": "DevOps"},
+            ]
+            db.skills.insert_many(skills_data)
+            print("✅ Database auto-seeded with default data")
+    except Exception as e:
+        print(f"❌ MongoDB connection failed: {e}")
+        print("   Make sure MONGO_URI env variable is set correctly in Render dashboard")
+        print("   Format: mongodb+srv://<user>:<password>@<cluster>.mongodb.net/portfolio_db?retryWrites=true&w=majority")
 
 # CORS configuration — allow all origins for deployment
 app.add_middleware(
@@ -63,4 +71,9 @@ app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
 
 @app.get("/api/health")
 def health_check():
-    return {"status": "ok", "message": "Portfolio API is running", "db": "MongoDB"}
+    try:
+        db = get_db()
+        db.command("ping")
+        return {"status": "ok", "message": "Portfolio API is running", "db": "MongoDB connected"}
+    except Exception as e:
+        return {"status": "error", "message": f"MongoDB: {str(e)[:100]}", "db": "disconnected"}

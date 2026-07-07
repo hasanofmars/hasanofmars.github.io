@@ -10,7 +10,9 @@ services:
     healthCheckPath: /api/health
     envVars:
       - key: MONGO_URI
-        sync: false  # Set this in Render dashboard
+        sync: false
+        # IMPORTANT: Go to Render Dashboard → Environment → add:
+        # mongodb+srv://<user>:<password>@<cluster>.mongodb.net/portfolio_db?retryWrites=true&w=majority
       - key: MONGO_DB
         value: portfolio_db
       - key: SECRET_KEY
@@ -18,4 +20,4 @@ services:
       - key: ADMIN_USERNAME
         value: admin
       - key: ADMIN_PASSWORD
-        value: admin123
+        generateValue: true
