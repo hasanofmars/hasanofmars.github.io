@@ -465,8 +465,8 @@ function getIconSvg(icon) {
 
   .skills-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
   }
 
   .skills-col {
@@ -477,22 +477,23 @@ function getIconSvg(icon) {
   }
 
   .skills-category-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
     font-family: var(--font-mono);
-    font-size: 0.8rem;
     color: var(--accent-cyan);
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     padding-bottom: 6px;
     border-bottom: 1px solid var(--border-color);
     text-transform: uppercase;
     letter-spacing: 1px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
   }
 
   .skills-category-title svg {
     width: 16px;
     height: 16px;
+    color: var(--accent-green);
   }
 
   .skill-category-group h3 {
@@ -764,7 +765,7 @@ function getIconSvg(icon) {
     }
     .skills-grid {
       grid-template-columns: 1fr;
-      gap: 12px;
+      gap: 16px;
     }
     .skills-col {
       padding: 14px;
