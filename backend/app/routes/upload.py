@@ -1,15 +1,22 @@
 import os
 import shutil
 from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi.staticfiles import StaticFiles
 from app.auth import get_current_user
 from fastapi import Depends
 
 router = APIRouter(prefix="/api/upload", tags=["upload"])
 
-# Path to frontend public images directory (relative to project root)
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), ".."))
-FRONTEND_IMG_DIR = os.path.join(BASE_DIR, "frontend", "public", "images")
-os.makedirs(FRONTEND_IMG_DIR, exist_ok=True)
+# Save avatars to local uploads directory (works on Render)
+UPLOAD_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "uploads")
+AVATAR_DIR = os.path.join(UPLOAD_DIR, "avatars")
+os.makedirs(AVATAR_DIR, exist_ok=True)
+
+
+def mount_static(app):
+    """Call this from main.py to serve uploaded files."""
+    if os.path.exists(UPLOAD_DIR):
+        app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
 
 @router.post("/avatar")
@@ -18,10 +25,11 @@ async def upload_avatar(file: UploadFile = File(...), _=Depends(get_current_user
     if not file.content_type or not file.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="Only image files are allowed")
 
-    # Save to public/images/profile.jpg
-    file_path = os.path.join(FRONTEND_IMG_DIR, "profile.jpg")
+    # Save to uploads/avatars/profile.jpg
+    file_path = os.path.join(AVATAR_DIR, "profile.jpg")
 
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    return {"message": "Avatar uploaded successfully", "path": "/images/profile.jpg"}
+    avatar_url = f"/uploads/avatars/profile.jpg"
+    return {"message": "Avatar uploaded successfully", "path": avatar_url}

@@ -22,7 +22,7 @@ profile = {
     "title": "Full Stack Developer & Cybersecurity Expert",
     "location": "Dhaka, Bangladesh",
     "bio": "I'm M Hasan, a passionate Full Stack Developer and Cybersecurity Expert based in Dhaka, Bangladesh. With over 5 years of experience, I specialize in building secure, scalable web applications and protecting digital infrastructure from emerging threats.",
-    "avatar_url": "/images/profile.jpg",
+    "avatar_url": "/uploads/avatars/profile.jpg",
     "email": "mhasan@security.dev",
     "github": "https://github.com/mhasan",
     "linkedin": "https://linkedin.com/in/mhasan",

@@ -15,7 +15,7 @@ DEFAULT_PROFILE = {
     "title": "Full Stack Developer & Cybersecurity Expert",
     "location": "Dhaka, Bangladesh",
     "bio": "",
-    "avatar_url": "/images/profile.jpg",
+    "avatar_url": "/uploads/avatars/profile.jpg",
     "email": "mhasan@security.dev",
     "github": "https://github.com/mhasan",
     "linkedin": "https://linkedin.com/in/mhasan",

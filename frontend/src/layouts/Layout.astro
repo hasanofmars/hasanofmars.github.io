@@ -24,10 +24,34 @@ const { title, description } = Astro.props;
   <body>
     <div class="grid-bg"></div>
     <script>
-      // API base URL - uses localhost:8000 in dev, same origin in production
-      window.API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:8000'
-        : '';
+      // API base URL - auto-detects dev vs production
+      (function() {
+        var host = window.location.hostname;
+        var isDev = host === 'localhost' || host === '127.0.0.1';
+        // Set your Render backend URL here after deployment
+        window.API_BASE = isDev ? 'http://localhost:8000' : 'https://portfolio-api.onrender.com';
+        window.API_READY = true;
+      })();
+
+      // Load avatar from backend API (runs on every page)
+      (function() {
+        var API = window.API_BASE || 'http://localhost:8000';
+        fetch(API + '/api/profile/')
+          .then(function(r) { return r.json(); })
+          .then(function(profile) {
+            if (profile && profile.avatar_url) {
+              var avatars = document.querySelectorAll('.hero-avatar-img, .avatar-img, .topbar-avatar');
+              for (var i = 0; i < avatars.length; i++) {
+                if (avatars[i].tagName === 'IMG') {
+                  avatars[i].src = profile.avatar_url.startsWith('http')
+                    ? profile.avatar_url
+                    : API + profile.avatar_url;
+                }
+              }
+            }
+          })
+          .catch(function() { /* use fallback images */ });
+      })();
     </script>
     <slot />
   </body>
