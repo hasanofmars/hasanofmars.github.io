@@ -24,9 +24,16 @@ const { title, description } = Astro.props;
   <body>
     <div class="grid-bg"></div>
     <script>
-      // API base URL - connects to local FastAPI backend
-      window.API_BASE = 'http://localhost:8000';
-      window.API_READY = true;
+      // API base URL - auto-detects dev vs Cloudflare Pages
+      (function() {
+        var host = window.location.hostname;
+        var isDev = host === 'localhost' || host === '127.0.0.1';
+        // Update this URL to your deployed backend (Render, Railway, etc.)
+        window.API_BASE = isDev
+          ? 'http://localhost:8000'
+          : 'https://portfolio-api.onrender.com';
+        window.API_READY = true;
+      })();
 
       // Load avatar from backend API (runs on every page)
       (function() {
@@ -35,12 +42,17 @@ const { title, description } = Astro.props;
           .then(function(r) { return r.json(); })
           .then(function(profile) {
             if (profile && profile.avatar_url) {
+              var url = profile.avatar_url;
+              // If it's a frontend static path, use it directly (don't proxy through backend)
+              if (url.startsWith('/images/')) {
+                // Already correct — served from frontend static files
+              } else if (!url.startsWith('http')) {
+                url = API + url;
+              }
               var avatars = document.querySelectorAll('.hero-avatar-img, .avatar-img, .topbar-avatar');
               for (var i = 0; i < avatars.length; i++) {
                 if (avatars[i].tagName === 'IMG') {
-                  avatars[i].src = profile.avatar_url.startsWith('http')
-                    ? profile.avatar_url
-                    : API + profile.avatar_url;
+                  avatars[i].src = url;
                 }
               }
             }

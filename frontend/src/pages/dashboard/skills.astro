@@ -1,0 +1,159 @@
+---
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+---
+
+<DashboardLayout title="Skills">
+  <div class="dash-header">
+    <h1>Manage <span class="gradient-text">Skills</span></h1>
+    <p>Add, edit, or remove technical skills shown on the homepage</p>
+  </div>
+
+  <div class="form-card">
+    <form id="skillForm" class="dash-form">
+      <input type="hidden" id="editId" value="" />
+      <div class="form-row">
+        <div class="form-group">
+          <label for="skill_name">Skill Name *</label>
+          <input type="text" id="skill_name" placeholder="e.g., Python" required />
+        </div>
+        <div class="form-group">
+          <label for="skill_level">Proficiency (0-100)</label>
+          <input type="range" id="skill_level" min="0" max="100" value="80" />
+          <span id="levelDisplay" style="font-family:var(--font-mono);color:var(--accent-green);font-size:0.85rem;">80%</span>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="skill_category">Category</label>
+          <select id="skill_category">
+            <option value="Frontend">Frontend</option>
+            <option value="Backend">Backend</option>
+            <option value="Security">Security</option>
+            <option value="DevOps">DevOps</option>
+            <option value="Database">Database</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="skill_icon">Icon (optional)</label>
+          <input type="text" id="skill_icon" placeholder="e.g., python, js, docker" />
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="submitBtn">Add Skill</button>
+        <button type="button" class="btn btn-outline" id="cancelBtn" style="display:none;">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="dash-table-wrapper">
+    <h2 class="section-label">All Skills</h2>
+    <div class="dash-table-container">
+      <table class="dash-table" id="skillsTable">
+        <thead><tr><th>Name</th><th>Category</th><th>Level</th><th>Actions</th></tr></thead>
+        <tbody id="skillsBody"><tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:40px;">Loading skills...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</DashboardLayout>
+
+<style>
+  .dash-header { margin-bottom: 28px; }
+  .dash-header h1 { font-size: 2rem; margin-bottom: 8px; }
+  .dash-header p { color: var(--text-secondary); font-family: var(--font-mono); font-size: 0.9rem; }
+  .form-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 28px; margin-bottom: 36px; }
+  .dash-form .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .dash-form .form-group { margin-bottom: 16px; }
+  .form-actions { display: flex; gap: 12px; margin-top: 8px; }
+  .section-label { font-size: 1.1rem; color: var(--text-primary); margin-bottom: 16px; font-family: var(--font-mono); }
+  .dash-table-container { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow-x: auto; }
+  .dash-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  .dash-table th { padding: 14px 20px; text-align: left; font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); font-weight: 600; border-bottom: 1px solid var(--border-color); background: var(--bg-secondary); }
+  .dash-table td { padding: 14px 20px; border-bottom: 1px solid var(--border-color); color: var(--text-primary); }
+  .dash-table tr:last-child td { border-bottom: none; }
+  .dash-table tr:hover td { background: rgba(0,255,65,0.02); }
+  .table-actions { display: flex; gap: 8px; }
+  .table-actions button { padding: 6px 14px; font-size: 0.75rem; border-radius: var(--radius-sm); border: none; cursor: pointer; font-weight: 600; transition: var(--transition); font-family: var(--font-mono); }
+  .btn-edit { background: rgba(0,212,255,0.1); color: var(--accent-cyan); border: 1px solid rgba(0,212,255,0.2) !important; }
+  .btn-edit:hover { background: rgba(0,212,255,0.2); }
+  .btn-delete { background: rgba(255,71,87,0.1); color: var(--accent-red); border: 1px solid rgba(255,71,87,0.2) !important; }
+  .btn-delete:hover { background: rgba(255,71,87,0.2); }
+  .level-bar { display: inline-block; height: 8px; border-radius: 4px; background: var(--gradient-main); min-width: 20px; }
+  input[type="range"] { width: 100%; accent-color: var(--accent-green); }
+  @media (max-width: 768px) { .dash-form .form-row { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  const API = window.API_BASE || 'http://localhost:8000';
+  const token = localStorage.getItem('token');
+  const headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
+
+  const form = document.getElementById('skillForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const cancelBtn = document.getElementById('cancelBtn');
+  const editId = document.getElementById('editId');
+  const tbody = document.getElementById('skillsBody');
+  const levelRange = document.getElementById('skill_level');
+  const levelDisplay = document.getElementById('levelDisplay');
+
+  levelRange.addEventListener('input', () => { levelDisplay.textContent = levelRange.value + '%'; });
+
+  async function loadSkills() {
+    try {
+      const res = await fetch(`${API}/api/skills/`);
+      const data = await res.json();
+      if (!Array.isArray(data)) throw new Error('Invalid');
+      if (data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:40px;">No skills yet.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.map(s => {
+        var bar = '<div class="level-bar" style="width:' + s.level + 'px;max-width:200px;"></div>';
+        return '<tr><td><strong>' + s.name + '</strong></td><td>' + (s.category || '—') + '</td><td><div style="display:flex;align-items:center;gap:10px;">' + bar + '<span style="font-family:var(--font-mono);font-size:0.8rem;color:var(--accent-green);">' + s.level + '%</span></div></td><td><div class="table-actions"><button class="btn-edit" onclick=\'editSkill("' + s.id + '","' + (s.name || '').replace(/"/g,'&quot;') + '","' + s.level + '","' + (s.category || '') + '","' + (s.icon || '') + '")\'>Edit</button><button class="btn-delete" onclick="deleteSkill(\'' + s.id + '\')">Delete</button></div></td></tr>';
+      }).join('');
+    } catch { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:40px;">Cannot load skills.</td></tr>'; }
+  }
+
+  window.editSkill = function(id, name, level, category, icon) {
+    editId.value = id;
+    document.getElementById('skill_name').value = name;
+    document.getElementById('skill_level').value = level;
+    document.getElementById('skill_category').value = category;
+    document.getElementById('skill_icon').value = icon;
+    levelDisplay.textContent = level + '%';
+    submitBtn.textContent = 'Update Skill';
+    cancelBtn.style.display = 'inline-flex';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  cancelBtn.addEventListener('click', () => { form.reset(); editId.value = ''; submitBtn.textContent = 'Add Skill'; cancelBtn.style.display = 'none'; levelDisplay.textContent = '80%'; });
+
+  window.deleteSkill = async function(id) {
+    if (!confirm('Delete this skill?')) return;
+    try {
+      const res = await fetch(`${API}/api/skills/${id}`, { method: 'DELETE', headers });
+      if (res.ok) loadSkills();
+      else alert('Delete failed');
+    } catch { alert('Server unavailable'); }
+  };
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    var payload = {
+      name: document.getElementById('skill_name').value,
+      level: parseInt(document.getElementById('skill_level').value) || 50,
+      category: document.getElementById('skill_category').value,
+      icon: document.getElementById('skill_icon').value || null,
+    };
+    var isEdit = editId.value !== '';
+    try {
+      var url = isEdit ? `${API}/api/skills/${editId.value}` : `${API}/api/skills/`;
+      var method = isEdit ? 'PUT' : 'POST';
+      var res = await fetch(url, { method, headers, body: JSON.stringify(payload) });
+      if (res.ok) { form.reset(); editId.value = ''; submitBtn.textContent = 'Add Skill'; cancelBtn.style.display = 'none'; levelDisplay.textContent = '80%'; loadSkills(); }
+      else { var err = await res.json(); alert('Error: ' + (err.detail || 'Unknown')); }
+    } catch { alert('Cannot connect to server'); }
+  });
+
+  loadSkills();
+</script>

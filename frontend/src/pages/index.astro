@@ -80,6 +80,16 @@ import Footer from '../components/Footer.astro';
     </div>
   </section>
 
+  <!-- Skills Section -->
+  <section class="section skills-section">
+    <div class="container">
+      <h2 class="section-title">Technical <span class="gradient-text">Skills</span></h2>
+      <p class="section-subtitle">Technologies and expertise I work with</p>
+      <div class="skills-grid" id="skillsGrid">
+      </div>
+    </div>
+  </section>
+
   <!-- Services Section -->
   <section class="section services-section">
     <div class="container">
@@ -397,6 +407,75 @@ import Footer from '../components/Footer.astro';
     gap: 10px;
   }
 
+  /* ===== Skills Section ===== */
+  .skills-section {
+    background: var(--bg-secondary);
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+  }
+
+  .skill-category-group h3 {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--accent-cyan);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .skill-bar-item {
+    margin-bottom: 14px;
+  }
+
+  .skill-bar-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  .skill-bar-name {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--text-primary);
+  }
+
+  .skill-bar-value {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent-green);
+  }
+
+  .skill-bar-track {
+    width: 100%;
+    height: 6px;
+    background: var(--bg-primary);
+    border-radius: 3px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+  }
+
+  .skill-bar-fill {
+    height: 100%;
+    background: var(--gradient-main);
+    border-radius: 3px;
+    transition: width 1s ease;
+    width: 0;
+  }
+
+  .skill-bar-fill.animated {
+    animation: skillGrow 1.5s ease forwards;
+  }
+
+  @keyframes skillGrow {
+    from { width: 0; }
+  }
+
   /* ===== Services ===== */
   .services-grid {
     display: grid;
@@ -598,7 +677,44 @@ import Footer from '../components/Footer.astro';
     } catch (e) { console.log('Services API unavailable'); }
   }
 
+  async function loadSkills() {
+    try {
+      const res = await fetch(`${API}/api/skills/`);
+      const skills = await res.json();
+      const grid = document.querySelector('#skillsGrid');
+      if (!skills.length) return;
+
+      // Group by category
+      var groups = {};
+      for (var i = 0; i < skills.length; i++) {
+        var s = skills[i];
+        var cat = s.category || 'Other';
+        if (!groups[cat]) groups[cat] = [];
+        groups[cat].push(s);
+      }
+
+      var html = '';
+      var catOrder = ['Backend', 'Frontend', 'Security', 'DevOps', 'Database', 'Other'];
+      for (var c = 0; c < catOrder.length; c++) {
+        var catName = catOrder[c];
+        var items = groups[catName];
+        if (!items) continue;
+        html += '<div class="skill-category-group"><h3>' + catName + '</h3>';
+        for (var j = 0; j < items.length; j++) {
+          var sk = items[j];
+          html += '<div class="skill-bar-item">' +
+            '<div class="skill-bar-header"><span class="skill-bar-name">' + sk.name + '</span><span class="skill-bar-value">' + sk.level + '%</span></div>' +
+            '<div class="skill-bar-track"><div class="skill-bar-fill animated" style="width:' + sk.level + '%"></div></div>' +
+            '</div>';
+        }
+        html += '</div>';
+      }
+      grid.innerHTML = html;
+    } catch (e) { console.log('Skills API unavailable'); }
+  }
+
   loadHomepage();
   loadFeaturedProjects();
+  loadSkills();
   loadServices();
 </script>
