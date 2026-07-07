@@ -3,17 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-
-const allProjects = [
-  { title: 'NetShield Pro', description: 'Enterprise-grade network security scanner with real-time threat detection and automated incident response system.', techStack: 'Python,Scapy,MongoDB,Docker', liveUrl: '#', githubUrl: '#', category: 'Cybersecurity', featured: true },
-  { title: 'SecureVault Cloud', description: 'End-to-end encrypted cloud storage with zero-knowledge architecture, file integrity monitoring, and secure sharing.', techStack: 'React,Node.js,AES-256,PostgreSQL', liveUrl: '#', githubUrl: '#', category: 'Security', featured: true },
-  { title: 'WebDefender WAF', description: 'AI-powered web application firewall with DDoS mitigation, bot detection, and real-time traffic analysis.', techStack: 'FastAPI,Redis,TensorFlow,Nginx', liveUrl: '#', githubUrl: '#', category: 'Cybersecurity', featured: true },
-  { title: 'BugTracker Pro', description: 'Advanced bug tracking and project management platform with sprint planning and team collaboration tools.', techStack: 'React,Django,PostgreSQL,Docker', liveUrl: '#', githubUrl: '#', category: 'Web App' },
-  { title: 'PortScan Analyzer', description: 'High-performance port scanning and service discovery tool with detailed reporting and vulnerability correlation.', techStack: 'Python,Asyncio,PostgreSQL,Redis', liveUrl: '#', githubUrl: '#', category: 'Security Tool' },
-  { title: 'E-Commerce Platform', description: 'Full-featured e-commerce platform with payment gateway integration, inventory management, and analytics dashboard.', techStack: 'Next.js,FastAPI,MongoDB,Stripe', liveUrl: '#', githubUrl: '#', category: 'Web App' },
-  { title: 'LogWatch SIEM', description: 'Security information and event management system with real-time log analysis, alerting, and compliance reporting.', techStack: 'Python,Elasticsearch,Kibana,Docker', liveUrl: '#', githubUrl: '#', category: 'Security' },
-  { title: 'DevOps Pipeline', description: 'Automated CI/CD pipeline with security scanning, container orchestration, and infrastructure as code.', techStack: 'GitHub Actions,Docker,K8s,Terraform', liveUrl: '#', githubUrl: '#', category: 'DevOps' },
-];
+import projects from '../data/projects.json';
 ---
 
 <Layout title="Projects">
@@ -38,9 +28,18 @@ const allProjects = [
       </div>
 
       <div class="projects-grid" id="projectsGrid">
-        {allProjects.map((p, i) => (
+        {projects.map((p, i) => (
           <div class="project-wrapper" data-category={p.category}>
-            <ProjectCard {...p} index={i} />
+            <ProjectCard
+              title={p.title}
+              description={p.description}
+              techStack={p.tech_stack}
+              liveUrl={p.live_url}
+              githubUrl={p.github_url}
+              category={p.category}
+              featured={p.featured}
+              index={i}
+            />
           </div>
         ))}
       </div>
@@ -111,8 +110,18 @@ const allProjects = [
 
   @media (max-width: 768px) {
     .page-title { font-size: 2.2rem; }
-    .projects-grid { grid-template-columns: 1fr; }
+    .page-desc { font-size: 0.95rem; max-width: 100%; }
+    .projects-grid { grid-template-columns: 1fr; gap: 16px; }
     .filter-tabs { justify-content: center; }
+    .page-header { padding: 120px 0 40px; }
+  }
+
+  @media (max-width: 480px) {
+    .page-header { padding: 100px 0 30px; }
+    .page-title { font-size: 1.8rem; }
+    .filter-tabs { gap: 6px; }
+    .filter-btn { padding: 8px 14px; font-size: 0.75rem; }
+    .projects-grid { gap: 12px; }
   }
 </style>
 

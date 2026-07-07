@@ -1,0 +1,90 @@
+[
+  {
+    "id": 1,
+    "title": "NetShield Pro",
+    "description": "Enterprise-grade network security scanner with real-time threat detection and automated incident response system.",
+    "tech_stack": "Python,Scapy,MongoDB,Docker",
+    "live_url": "#",
+    "github_url": "#",
+    "category": "Cybersecurity",
+    "featured": true,
+    "created_at": "2026-06-15T10:00:00Z"
+  },
+  {
+    "id": 2,
+    "title": "SecureVault Cloud",
+    "description": "End-to-end encrypted cloud storage with zero-knowledge architecture, file integrity monitoring, and secure sharing.",
+    "tech_stack": "React,Node.js,AES-256,PostgreSQL",
+    "live_url": "#",
+    "github_url": "#",
+    "category": "Security",
+    "featured": true,
+    "created_at": "2026-05-20T10:00:00Z"
+  },
+  {
+    "id": 3,
+    "title": "WebDefender WAF",
+    "description": "AI-powered web application firewall with DDoS mitigation, bot detection, and real-time traffic analysis.",
+    "tech_stack": "FastAPI,Redis,TensorFlow,Nginx",
+    "live_url": "#",
+    "github_url": "#",
+    "category": "Cybersecurity",
+    "featured": true,
+    "created_at": "2026-04-10T10:00:00Z"
+  },
+  {
+    "id": 4,
+    "title": "BugTracker Pro",
+    "description": "Advanced bug tracking and project management platform with sprint planning and team collaboration tools.",
+    "tech_stack": "React,Django,PostgreSQL,Docker",
+    "live_url": "#",
+    "github_url": "#",
+    "category": "Web App",
+    "featured": false,
+    "created_at": "2026-03-05T10:00:00Z"
+  },
+  {
+    "id": 5,
+    "title": "PortScan Analyzer",
+    "description": "High-performance port scanning and service discovery tool with detailed reporting and vulnerability correlation.",
+    "tech_stack": "Python,Asyncio,PostgreSQL,Redis",
+    "live_url": "#",
+    "github_url": "#",
+    "category": "Security Tool",
+    "featured": false,
+    "created_at": "2026-02-01T10:00:00Z"
+  },
+  {
+    "id": 6,
+    "title": "E-Commerce Platform",
+    "description": "Full-featured e-commerce platform with payment gateway integration, inventory management, and analytics dashboard.",
+    "tech_stack": "Next.js,FastAPI,MongoDB,Stripe",
+    "live_url": "#",
+    "github_url": "#",
+    "category": "Web App",
+    "featured": false,
+    "created_at": "2026-01-15T10:00:00Z"
+  },
+  {
+    "id": 7,
+    "title": "LogWatch SIEM",
+    "description": "Security information and event management system with real-time log analysis, alerting, and compliance reporting.",
+    "tech_stack": "Python,Elasticsearch,Kibana,Docker",
+    "live_url": "#",
+    "github_url": "#",
+    "category": "Security",
+    "featured": false,
+    "created_at": "2025-12-01T10:00:00Z"
+  },
+  {
+    "id": 8,
+    "title": "DevOps Pipeline",
+    "description": "Automated CI/CD pipeline with security scanning, container orchestration, and infrastructure as code.",
+    "tech_stack": "GitHub Actions,Docker,K8s,Terraform",
+    "live_url": "#",
+    "github_url": "#",
+    "category": "DevOps",
+    "featured": false,
+    "created_at": "2025-11-10T10:00:00Z"
+  }
+]

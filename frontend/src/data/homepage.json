@@ -1,0 +1,16 @@
+{
+  "hero_badge": "Cybersecurity Expert & Developer",
+  "hero_title": "Hi, I'm M Hasan",
+  "hero_typing": "I build secure & scalable web solutions",
+  "hero_description": "Full Stack Developer & Cybersecurity Expert based in Dhaka, Bangladesh. Passionate about building secure, high-performance web applications and protecting digital infrastructure.",
+  "hero_status": "Available for projects",
+  "stats": [
+    { "number": "5+", "label": "Years Experience" },
+    { "number": "50+", "label": "Projects Done" },
+    { "number": "100+", "label": "Happy Clients" }
+  ],
+  "featured_title": "Featured Projects",
+  "featured_subtitle": "Highlighting my most impactful work in cybersecurity and web development",
+  "services_title": "What I Do",
+  "services_subtitle": "Comprehensive cybersecurity and development services"
+}

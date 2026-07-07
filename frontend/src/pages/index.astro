@@ -2,6 +2,27 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import SkillBar from '../components/SkillBar.astro';
+import homepage from '../data/homepage.json';
+import projects from '../data/projects.json';
+import skills from '../data/skills.json';
+import services from '../data/services.json';
+import profile from '../data/profile.json';
+
+const featuredProjects = projects.filter(p => p.featured);
+const homepageSkills = skills.filter(s => s.category === 'Frontend' || s.category === 'Backend');
+const securitySkills = skills.filter(s => s.category === 'Security' || s.category === 'DevOps' || s.category === 'Database');
+
+function getIconSvg(icon) {
+  const icons = {
+    code: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+    shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+    tool: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>',
+    cloud: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/></svg>',
+  };
+  return icons[icon] || icons.code;
+}
 ---
 
 <Layout title="Home">
@@ -12,48 +33,41 @@ import Footer from '../components/Footer.astro';
     <div class="container">
       <div class="hero-layout">
         <div class="hero-content">
-          <div class="hero-badge" id="heroBadge">
+          <div class="hero-badge">
             <span class="badge-dot"></span>
-            <span class="badge-text">Cybersecurity Expert & Developer</span>
+            <span class="badge-text">{homepage.hero_badge}</span>
           </div>
-          <h1 class="hero-title" id="heroTitle">
-            Hi, I'm <span class="gradient-text">M Hasan</span>
+          <h1 class="hero-title">
+            {homepage.hero_title.split('M Hasan')[0]}<span class="gradient-text">M Hasan</span>
           </h1>
           <div class="hero-typing">
-            <span class="typing-text" id="heroTyping">I build secure & scalable web solutions</span>
+            <span class="typing-text">{homepage.hero_typing}</span>
           </div>
-          <p class="hero-desc" id="heroDesc">
-            Full Stack Developer & Cybersecurity Expert based in <strong>Dhaka, Bangladesh</strong>.
-            Passionate about building secure, high-performance web applications and protecting digital infrastructure.
+          <p class="hero-desc">
+            {homepage.hero_description}
           </p>
           <div class="hero-actions">
             <a href="/projects" class="btn btn-primary">View Projects</a>
             <a href="/contact" class="btn btn-outline">Contact Me</a>
           </div>
-          <div class="hero-stats" id="heroStats">
-            <div class="stat-item">
-              <span class="stat-number">5+</span>
-              <span class="stat-label">Years Experience</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-number">50+</span>
-              <span class="stat-label">Projects Done</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-number">100+</span>
-              <span class="stat-label">Happy Clients</span>
-            </div>
+          <div class="hero-stats">
+            {homepage.stats.map(stat => (
+              <div class="stat-item">
+                <span class="stat-number">{stat.number}</span>
+                <span class="stat-label">{stat.label}</span>
+              </div>
+            ))}
           </div>
         </div>
         <div class="hero-avatar-wrapper">
           <div class="hero-avatar-frame">
-            <img src="/images/profile.jpg" alt="M Hasan" class="hero-avatar-img" />
+            <img src={profile.avatar_url} alt={profile.name} class="hero-avatar-img" />
             <div class="hero-avatar-ring"></div>
           </div>
           <div class="hero-avatar-glow"></div>
           <div class="hero-status">
             <span class="status-dot"></span>
-            Available for projects
+            {homepage.hero_status}
           </div>
         </div>
       </div>
@@ -70,9 +84,21 @@ import Footer from '../components/Footer.astro';
   <!-- Featured Projects -->
   <section class="section featured-section">
     <div class="container">
-      <h2 class="section-title" id="featuredTitle">Featured <span class="gradient-text">Projects</span></h2>
-      <p class="section-subtitle" id="featuredSubtitle">Highlighting my most impactful work in cybersecurity and web development</p>
-      <div class="projects-grid" id="featuredGrid">
+      <h2 class="section-title">{homepage.featured_title.split('Projects')[0]}<span class="gradient-text">Projects</span></h2>
+      <p class="section-subtitle">{homepage.featured_subtitle}</p>
+      <div class="projects-grid">
+        {featuredProjects.map((p, i) => (
+          <ProjectCard
+            title={p.title}
+            description={p.description}
+            techStack={p.tech_stack}
+            liveUrl={p.live_url}
+            githubUrl={p.github_url}
+            category={p.category}
+            featured={p.featured}
+            index={i}
+          />
+        ))}
       </div>
       <div class="text-center" style="text-align:center;margin-top:40px;">
         <a href="/projects" class="btn btn-outline">View All Projects →</a>
@@ -85,7 +111,25 @@ import Footer from '../components/Footer.astro';
     <div class="container">
       <h2 class="section-title">Technical <span class="gradient-text">Skills</span></h2>
       <p class="section-subtitle">Technologies and expertise I work with</p>
-      <div class="skills-grid" id="skillsGrid">
+      <div class="skills-grid">
+        <div class="skills-col">
+          <h3 class="skills-category-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            Development
+          </h3>
+          {homepageSkills.map((s, i) => (
+            <SkillBar name={s.name} level={s.level} category={s.category} index={i} />
+          ))}
+        </div>
+        <div class="skills-col">
+          <h3 class="skills-category-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Security & DevOps
+          </h3>
+          {securitySkills.map((s, i) => (
+            <SkillBar name={s.name} level={s.level} category={s.category} index={i} />
+          ))}
+        </div>
       </div>
     </div>
   </section>
@@ -93,9 +137,16 @@ import Footer from '../components/Footer.astro';
   <!-- Services Section -->
   <section class="section services-section">
     <div class="container">
-      <h2 class="section-title" id="servicesTitle">What I <span class="gradient-text">Do</span></h2>
-      <p class="section-subtitle" id="servicesSubtitle">Comprehensive cybersecurity and development services</p>
-      <div class="services-grid" id="servicesGrid">
+      <h2 class="section-title">{homepage.services_title.split('I')[0]}I <span class="gradient-text">Do</span></h2>
+      <p class="section-subtitle">{homepage.services_subtitle}</p>
+      <div class="services-grid">
+        {services.map((service, i) => (
+          <article class="service-card" style={`animation-delay: ${i * 0.1}s`}>
+            <div class="service-icon" set:html={getIconSvg(service.icon)}></div>
+            <h3 class="service-title">{service.title}</h3>
+            <p class="service-desc">{service.description}</p>
+          </article>
+        ))}
       </div>
     </div>
   </section>
@@ -414,8 +465,34 @@ import Footer from '../components/Footer.astro';
 
   .skills-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .skills-col {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 20px;
+  }
+
+  .skills-category-title {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent-cyan);
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border-color);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .skills-category-title svg {
+    width: 16px;
+    height: 16px;
   }
 
   .skill-category-group h3 {
@@ -606,115 +683,113 @@ import Footer from '../components/Footer.astro';
     .projects-grid {
       grid-template-columns: 1fr;
     }
+    .services-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .service-card {
+      padding: 20px;
+    }
+    .section {
+      padding: 50px 0;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero {
+      min-height: auto;
+      padding: 100px 0 60px;
+    }
+    .hero-title {
+      font-size: 2rem;
+    }
+    .hero-badge {
+      font-size: 0.75rem;
+      padding: 6px 12px;
+      margin-bottom: 20px;
+    }
+    .hero-desc {
+      font-size: 0.95rem;
+      margin-bottom: 24px;
+    }
+    .hero-stats {
+      flex-direction: row;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .stat-item {
+      min-width: 80px;
+    }
+    .stat-number {
+      font-size: 1.3rem;
+    }
+    .stat-label {
+      font-size: 0.7rem;
+    }
+    .hero-actions {
+      margin-bottom: 30px;
+    }
+    .hero-avatar-frame {
+      width: 130px;
+      height: 130px;
+    }
+    .hero-avatar-img {
+      width: 120px;
+      height: 120px;
+    }
+    .hero-avatar-glow {
+      width: 150px;
+      height: 150px;
+    }
+    .hero-avatar-ring {
+      inset: -6px;
+    }
+    .hero-status {
+      font-size: 0.7rem;
+      padding: 6px 14px;
+    }
+    .section-title {
+      font-size: 1.5rem;
+    }
+    .section-subtitle {
+      font-size: 0.85rem;
+      margin-bottom: 1.5rem;
+    }
+    .projects-grid {
+      gap: 16px;
+    }
+    .skills-grid {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .skills-col {
+      padding: 14px;
+    }
+    .services-grid {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .service-card {
+      padding: 16px;
+    }
+    .service-icon {
+      width: 44px;
+      height: 44px;
+      margin-bottom: 14px;
+    }
+    .service-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+    .service-card h3 {
+      font-size: 0.95rem;
+    }
+    .service-card p {
+      font-size: 0.8rem;
+    }
+    .hero-particles {
+      display: none;
+    }
   }
 </style>
-
-<script>
-  const API = window.API_BASE || 'http://localhost:8000';
-
-  async function loadHomepage() {
-    try {
-      const res = await fetch(`${API}/api/homepage/`);
-      const data = await res.json();
-      if (data.hero_badge) document.querySelector('#heroBadge .badge-text').textContent = data.hero_badge;
-      if (data.hero_title) document.querySelector('#heroTitle').innerHTML = data.hero_title.replace('M Hasan', '<span class="gradient-text">M Hasan</span>');
-      if (data.hero_typing) document.querySelector('#heroTyping').textContent = data.hero_typing;
-      if (data.hero_description) document.querySelector('#heroDesc').innerHTML = data.hero_description.replace(/Dhaka, Bangladesh/g, '<strong>Dhaka, Bangladesh</strong>');
-      if (data.hero_status) document.querySelector('.hero-status').innerHTML = `<span class="status-dot"></span> ${data.hero_status}`;
-      if (data.stats && data.stats.length) {
-        document.querySelector('#heroStats').innerHTML = data.stats.map(s =>
-          `<div class="stat-item"><span class="stat-number">${s.number}</span><span class="stat-label">${s.label}</span></div>`
-        ).join('');
-      }
-      if (data.featured_title) document.querySelector('#featuredTitle').innerHTML = data.featured_title.replace(/Projects$/, '<span class="gradient-text">Projects</span>');
-      if (data.featured_subtitle) document.querySelector('#featuredSubtitle').textContent = data.featured_subtitle;
-      if (data.services_title) document.querySelector('#servicesTitle').innerHTML = data.services_title.replace(/Do$/, '<span class="gradient-text">Do</span>');
-      if (data.services_subtitle) document.querySelector('#servicesSubtitle').textContent = data.services_subtitle;
-    } catch (e) { console.log('Homepage API unavailable'); }
-  }
-
-  async function loadFeaturedProjects() {
-    try {
-      const res = await fetch(`${API}/api/projects/featured`);
-      let projects = await res.json();
-      if (!projects.length) {
-        const allRes = await fetch(`${API}/api/projects/`);
-        projects = (await allRes.json()).slice(0, 3);
-      }
-      const grid = document.querySelector('#featuredGrid');
-      if (projects.length) {
-        grid.innerHTML = projects.slice(0, 3).map(p => `
-          <article class="featured-card">
-            <div class="fc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-            <h3>${p.title}</h3>
-            <p>${p.description || ''}</p>
-            <div class="fc-tech">${(p.tech_stack || '').split(',').map(t => `<span>${t.trim()}</span>`).join('')}</div>
-            <div class="fc-actions">
-              ${p.live_url ? `<a href="${p.live_url}" class="btn btn-primary btn-small">Live Demo</a>` : ''}
-              ${p.github_url ? `<a href="${p.github_url}" class="btn btn-outline btn-small">Source</a>` : ''}
-            </div>
-          </article>
-        `).join('');
-      }
-    } catch (e) { console.log('Featured projects API unavailable'); }
-  }
-
-  async function loadServices() {
-    try {
-      const res = await fetch(`${API}/api/services/`);
-      const services = await res.json();
-      const icons = { 'code': '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>', 'shield': '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>', 'tool': '<path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>', 'cloud': '<path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/>' };
-      const grid = document.querySelector('#servicesGrid');
-      if (services.length) {
-        grid.innerHTML = services.map(s => `
-          <div class="service-card">
-            <div class="service-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">${icons[s.icon] || icons.code}</svg></div>
-            <h3>${s.title}</h3>
-            <p>${s.description}</p>
-          </div>
-        `).join('');
-      }
-    } catch (e) { console.log('Services API unavailable'); }
-  }
-
-  async function loadSkills() {
-    try {
-      const res = await fetch(`${API}/api/skills/`);
-      const skills = await res.json();
-      const grid = document.querySelector('#skillsGrid');
-      if (!skills.length) return;
-
-      // Group by category
-      var groups = {};
-      for (var i = 0; i < skills.length; i++) {
-        var s = skills[i];
-        var cat = s.category || 'Other';
-        if (!groups[cat]) groups[cat] = [];
-        groups[cat].push(s);
-      }
-
-      var html = '';
-      var catOrder = ['Backend', 'Frontend', 'Security', 'DevOps', 'Database', 'Other'];
-      for (var c = 0; c < catOrder.length; c++) {
-        var catName = catOrder[c];
-        var items = groups[catName];
-        if (!items) continue;
-        html += '<div class="skill-category-group"><h3>' + catName + '</h3>';
-        for (var j = 0; j < items.length; j++) {
-          var sk = items[j];
-          html += '<div class="skill-bar-item">' +
-            '<div class="skill-bar-header"><span class="skill-bar-name">' + sk.name + '</span><span class="skill-bar-value">' + sk.level + '%</span></div>' +
-            '<div class="skill-bar-track"><div class="skill-bar-fill animated" style="width:' + sk.level + '%"></div></div>' +
-            '</div>';
-        }
-        html += '</div>';
-      }
-      grid.innerHTML = html;
-    } catch (e) { console.log('Skills API unavailable'); }
-  }
-
-  loadHomepage();
-  loadFeaturedProjects();
-  loadSkills();
-  loadServices();
-</script>

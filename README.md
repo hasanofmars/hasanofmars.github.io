@@ -1,33 +1,19 @@
 # M Hasan - Portfolio
 
-Full Stack Developer & Cybersecurity Expert Portfolio — **Astro.js** + **FastAPI** + **MongoDB**.
+Full Stack Developer & Cybersecurity Expert Portfolio — **Astro.js** + **JSON**.
 
 ## 🚀 Tech Stack
 
 - **Frontend:** Astro.js
-- **Backend:** FastAPI
-- **Database:** MongoDB
+- **Data:** JSON files (build-time) + localStorage (dashboard edits)
 
 ## 🛠️ Getting Started
 
 ### Prerequisites
 
-- Python 3.10+
 - Node.js 18+
-- MongoDB (running locally on port 27017)
 
-### 1️⃣ Start Backend
-
-```bash
-cd backend
-pip install -r requirements.txt
-python seed.py
-python -m uvicorn app.main:app --reload --port 8000
-```
-
-API docs: http://localhost:8000/docs
-
-### 2️⃣ Start Frontend
+### Start Development
 
 ```bash
 cd frontend
@@ -37,29 +23,40 @@ npm run dev
 
 Portfolio: http://localhost:4321
 
-### 3️⃣ Login
+### Login
 
 **Username:** `admin`
 **Password:** `admin123`
 
 ## 📋 Dashboard (http://localhost:4321/dashboard/login)
 
+All CRUD operations save to **localStorage** — changes persist in your browser only.
+To make permanent changes, update the JSON files in `frontend/src/data/` and rebuild.
+
 - **Homepage** — Edit hero text, stats, section titles
 - **Projects** — Add/edit/delete portfolio projects
 - **Services** — Add/edit/delete homepage services
-- **Avatar** — Upload profile photo
+- **Skills** — Add/edit/delete technical skills
+- **Avatar** — Upload profile photo (saved as data URL)
 - **Settings** — Profile info & social links
 
-## 🛠️ Local Dev
+## 📁 Data Files
 
-**Backend:** `cd backend && pip install -r requirements.txt && python seed.py && python -m uvicorn app.main:app --reload --port 8000`
-**Frontend:** `cd frontend && npm install && npm run dev`
-**Login:** `admin` / `admin123`
+Edit `frontend/src/data/` to update site content permanently:
 
-## 📋 Dashboard
+| File            | Content                      |
+| --------------- | ---------------------------- |
+| `profile.json`  | Personal info & social links |
+| `homepage.json` | Hero section, stats, titles  |
+| `projects.json` | Portfolio projects           |
+| `skills.json`   | Technical skills             |
+| `services.json` | Services offered             |
+| `auth.json`     | Admin credentials            |
 
-- **Homepage** — Edit hero, stats, titles
-- **Projects** — CRUD portfolio projects
-- **Services** — CRUD homepage services
-- **Avatar** — Upload profile photo
-- **Settings** — Profile & social links
+## 🏗️ Build
+
+```bash
+cd frontend
+npm run build
+npm run preview
+```

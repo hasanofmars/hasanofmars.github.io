@@ -128,4 +128,43 @@ const delay = index * 0.1;
     display: flex;
     gap: 12px;
   }
+
+  @media (max-width: 480px) {
+    .project-card {
+      padding: 20px;
+    }
+    .card-title {
+      font-size: 1.1rem;
+    }
+    .card-desc {
+      font-size: 0.85rem;
+      margin-bottom: 14px;
+    }
+    .tech-stack {
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .tech-tag {
+      font-size: 0.7rem;
+      padding: 3px 8px;
+    }
+    .card-actions {
+      flex-direction: column;
+      gap: 8px;
+    }
+    .card-actions .btn {
+      width: 100%;
+      justify-content: center;
+    }
+    .featured-badge {
+      font-size: 0.65rem;
+      padding: 3px 8px;
+      top: 8px;
+      right: 8px;
+    }
+    .category-badge {
+      font-size: 0.65rem;
+      padding: 3px 8px;
+    }
+  }
 </style>

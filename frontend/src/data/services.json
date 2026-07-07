@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "title": "Web Development",
+    "description": "Modern, responsive web applications with React, Astro, FastAPI, and secure backend systems.",
+    "icon": "code",
+    "order": 1
+  },
+  {
+    "id": 2,
+    "title": "Penetration Testing",
+    "description": "Comprehensive security assessments, vulnerability scanning, and ethical hacking services.",
+    "icon": "shield",
+    "order": 2
+  },
+  {
+    "id": 3,
+    "title": "Security Consulting",
+    "description": "Architecture review, security best practices, compliance audits, and threat modeling.",
+    "icon": "tool",
+    "order": 3
+  },
+  {
+    "id": 4,
+    "title": "Cloud Security",
+    "description": "Secure cloud architecture design, implementation, and monitoring on AWS, Azure, and GCP.",
+    "icon": "cloud",
+    "order": 4
+  }
+]

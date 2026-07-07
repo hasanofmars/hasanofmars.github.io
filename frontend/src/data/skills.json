@@ -1,0 +1,14 @@
+[
+  { "name": "Python", "level": 95, "category": "Backend" },
+  { "name": "JavaScript / TypeScript", "level": 90, "category": "Frontend" },
+  { "name": "React / Astro", "level": 88, "category": "Frontend" },
+  { "name": "FastAPI / Django", "level": 92, "category": "Backend" },
+  { "name": "Node.js", "level": 85, "category": "Backend" },
+  { "name": "Penetration Testing", "level": 90, "category": "Security" },
+  { "name": "Network Security", "level": 88, "category": "Security" },
+  { "name": "Web Security (OWASP)", "level": 92, "category": "Security" },
+  { "name": "Docker / Kubernetes", "level": 85, "category": "DevOps" },
+  { "name": "MongoDB / PostgreSQL", "level": 87, "category": "Database" },
+  { "name": "Cloud (AWS / Azure)", "level": 82, "category": "DevOps" },
+  { "name": "Cryptography", "level": 80, "category": "Security" }
+]

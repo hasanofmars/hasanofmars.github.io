@@ -3,21 +3,8 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import SkillBar from '../components/SkillBar.astro';
-
-const skills = [
-  { name: 'Python', level: 95, category: 'Backend' },
-  { name: 'JavaScript / TypeScript', level: 90, category: 'Frontend' },
-  { name: 'React / Astro', level: 88, category: 'Frontend' },
-  { name: 'FastAPI / Django', level: 92, category: 'Backend' },
-  { name: 'Node.js', level: 85, category: 'Backend' },
-  { name: 'Penetration Testing', level: 90, category: 'Security' },
-  { name: 'Network Security', level: 88, category: 'Security' },
-  { name: 'Web Security (OWASP)', level: 92, category: 'Security' },
-  { name: 'Docker / Kubernetes', level: 85, category: 'DevOps' },
-  { name: 'MongoDB / PostgreSQL', level: 87, category: 'Database' },
-  { name: 'Cloud (AWS / Azure)', level: 82, category: 'DevOps' },
-  { name: 'Cryptography', level: 80, category: 'Security' },
-];
+import skills from '../data/skills.json';
+import profile from '../data/profile.json';
 ---
 
 <Layout title="About">
@@ -37,18 +24,18 @@ const skills = [
         <div class="bio-image-wrapper">
           <div class="bio-image-placeholder">
             <div class="avatar-frame">
-              <img src="/images/profile.jpg" alt="M Hasan" class="avatar-img" />
+              <img src={profile.avatar_url} alt={profile.name} class="avatar-img" />
               <div class="avatar-ring"></div>
             </div>
           </div>
           <div class="bio-contact">
             <div class="contact-chip">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              Dhaka, Bangladesh
+              {profile.location}
             </div>
             <div class="contact-chip">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              mhasan@security.dev
+              {profile.email}
             </div>
           </div>
         </div>
@@ -298,24 +285,33 @@ const skills = [
   .skills-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    gap: 20px;
+  }
+
+  .skills-col {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 20px;
   }
 
   .skills-category-title {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 1.1rem;
+    gap: 8px;
+    font-size: 0.85rem;
     font-family: var(--font-mono);
-    color: var(--text-primary);
-    margin-bottom: 24px;
-    padding-bottom: 12px;
+    color: var(--accent-cyan);
+    margin-bottom: 14px;
+    padding-bottom: 6px;
     border-bottom: 1px solid var(--border-color);
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
 
   .skills-category-title svg {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     color: var(--accent-green);
   }
 
@@ -369,14 +365,75 @@ const skills = [
     }
     .skills-grid {
       grid-template-columns: 1fr;
-      gap: 30px;
+      gap: 16px;
     }
     .page-title {
       font-size: 2.2rem;
     }
+    .page-desc {
+      font-size: 0.95rem;
+      max-width: 100%;
+    }
     .bio-stats-row {
       flex-wrap: wrap;
       gap: 20px;
+      justify-content: center;
+    }
+    .bio-content h2 {
+      font-size: 1.6rem;
+    }
+    .bio-content p {
+      font-size: 0.95rem;
+    }
+    .page-header {
+      padding: 120px 0 40px;
+    }
+    .cert-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .page-header {
+      padding: 100px 0 30px;
+    }
+    .page-title {
+      font-size: 1.8rem;
+    }
+    .avatar-frame {
+      width: 160px;
+      height: 160px;
+    }
+    .avatar-img {
+      width: 145px;
+      height: 145px;
+    }
+    .contact-chip {
+      font-size: 0.8rem;
+      padding: 8px 14px;
+    }
+    .bio-content h2 {
+      font-size: 1.3rem;
+    }
+    .bio-stats-row {
+      gap: 14px;
+    }
+    .bio-stat-num {
+      font-size: 1.2rem;
+    }
+    .bio-stat-label {
+      font-size: 0.7rem;
+    }
+    .skills-col {
+      padding: 14px;
+    }
+    .cert-grid {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .cert-card {
+      padding: 20px;
     }
   }
 </style>
