@@ -108,19 +108,25 @@ import projects from '../data/projects.json';
     transition: var(--transition);
   }
 
+  @media (max-width: 1024px) {
+    .page-header { padding: 140px 0 50px; }
+    .projects-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+  }
+
   @media (max-width: 768px) {
     .page-title { font-size: 2.2rem; }
     .page-desc { font-size: 0.95rem; max-width: 100%; }
     .projects-grid { grid-template-columns: 1fr; gap: 16px; }
-    .filter-tabs { justify-content: center; }
+    .filter-tabs { justify-content: center; gap: 8px; }
+    .filter-btn { padding: 8px 16px; font-size: 0.8rem; }
     .page-header { padding: 120px 0 40px; }
   }
 
   @media (max-width: 480px) {
-    .page-header { padding: 100px 0 30px; }
+    .page-header { padding: 100px 0 28px; }
     .page-title { font-size: 1.8rem; }
     .filter-tabs { gap: 6px; }
-    .filter-btn { padding: 8px 14px; font-size: 0.75rem; }
+    .filter-btn { padding: 6px 12px; font-size: 0.7rem; }
     .projects-grid { gap: 12px; }
   }
 </style>

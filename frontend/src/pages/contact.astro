@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import profile from '../data/profile.json';
+import contact from '../data/contact.json';
 ---
 
 <Layout title="Contact">
@@ -18,11 +20,8 @@ import Footer from '../components/Footer.astro';
     <div class="container">
       <div class="contact-grid">
         <div class="contact-info">
-          <h2>Let's build something <span class="gradient-text">secure</span></h2>
-          <p>
-            I'm always open to discussing new projects, creative ideas, or opportunities 
-            to be part of your vision. Feel free to reach out!
-          </p>
+          <h2>{contact.heading.split(' secure')[0]} <span class="gradient-text">secure</span></h2>
+          <p>{contact.description}</p>
 
           <div class="contact-details">
             <div class="contact-item">
@@ -31,7 +30,7 @@ import Footer from '../components/Footer.astro';
               </div>
               <div>
                 <h4>Email</h4>
-                <a href="mailto:mhasan@security.dev">mhasan@security.dev</a>
+                <a href={`mailto:${profile.email}`}>{profile.email}</a>
               </div>
             </div>
             <div class="contact-item">
@@ -40,7 +39,7 @@ import Footer from '../components/Footer.astro';
               </div>
               <div>
                 <h4>Location</h4>
-                <p>Dhaka, Bangladesh</p>
+                <p>{profile.location}</p>
               </div>
             </div>
             <div class="contact-item">
@@ -49,14 +48,14 @@ import Footer from '../components/Footer.astro';
               </div>
               <div>
                 <h4>GitHub</h4>
-                <a href="https://github.com/mhasan" target="_blank">github.com/mhasan</a>
+                <a href={contact.social.github} target="_blank">{contact.social.github.replace('https://', '')}</a>
               </div>
             </div>
           </div>
 
           <div class="availability">
             <div class="avail-dot"></div>
-            <span>Available for freelance & consulting</span>
+            <span>{contact.availability}</span>
           </div>
         </div>
 
@@ -207,26 +206,35 @@ import Footer from '../components/Footer.astro';
     min-height: 120px;
   }
 
+  @media (max-width: 1024px) {
+    .contact-grid { gap: 40px; }
+    .page-header { padding: 140px 0 50px; }
+  }
+
   @media (max-width: 768px) {
-    .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+    .contact-grid { grid-template-columns: 1fr; gap: 36px; }
     .form-row { grid-template-columns: 1fr; }
     .page-title { font-size: 2.2rem; }
     .page-desc { font-size: 0.95rem; max-width: 100%; }
     .contact-form-wrapper { padding: 24px; }
     .page-header { padding: 120px 0 40px; }
     .contact-info h2 { font-size: 1.6rem; }
+    .contact-details { gap: 18px; }
   }
 
   @media (max-width: 480px) {
-    .page-header { padding: 100px 0 30px; }
+    .page-header { padding: 100px 0 28px; }
     .page-title { font-size: 1.8rem; }
-    .contact-form-wrapper { padding: 16px; }
-    .contact-item { flex-direction: column; align-items: center; text-align: center; }
+    .contact-form-wrapper { padding: 16px; border-radius: var(--radius-md); }
+    .contact-item { flex-direction: column; align-items: center; text-align: center; gap: 10px; }
     .contact-icon { width: 36px; height: 36px; min-width: 36px; }
     .contact-icon svg { width: 16px; height: 16px; }
-    .contact-info h2 { font-size: 1.3rem; }
-    .contact-info > p { font-size: 0.9rem; }
-    .availability { font-size: 0.75rem; padding: 10px 14px; }
+    .contact-info h2 { font-size: 1.3rem; margin-bottom: 14px; }
+    .contact-info > p { font-size: 0.9rem; margin-bottom: 24px; }
+    .contact-details { gap: 14px; }
+    .availability { font-size: 0.75rem; padding: 10px 14px; flex-wrap: wrap; justify-content: center; }
+    .form-group { margin-bottom: 14px; }
+    input, textarea { padding: 10px 14px; font-size: 0.9rem; }
   }
 </style>
 

@@ -358,6 +358,11 @@ import profile from '../data/profile.json';
     font-size: 0.85rem;
   }
 
+  @media (max-width: 1024px) {
+    .bio-grid { gap: 40px; }
+    .page-header { padding: 140px 0 50px; }
+  }
+
   @media (max-width: 768px) {
     .bio-grid {
       grid-template-columns: 1fr;
@@ -396,7 +401,7 @@ import profile from '../data/profile.json';
 
   @media (max-width: 480px) {
     .page-header {
-      padding: 100px 0 30px;
+      padding: 100px 0 28px;
     }
     .page-title {
       font-size: 1.8rem;
@@ -409,12 +414,18 @@ import profile from '../data/profile.json';
       width: 145px;
       height: 145px;
     }
+    .avatar-ring {
+      inset: -6px;
+    }
     .contact-chip {
       font-size: 0.8rem;
       padding: 8px 14px;
     }
     .bio-content h2 {
       font-size: 1.3rem;
+    }
+    .bio-content p {
+      font-size: 0.9rem;
     }
     .bio-stats-row {
       gap: 14px;
@@ -434,6 +445,9 @@ import profile from '../data/profile.json';
     }
     .cert-card {
       padding: 20px;
+    }
+    .cert-card h3 {
+      font-size: 0.9rem;
     }
   }
 </style>
