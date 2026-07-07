@@ -1,9 +1,0 @@
-# Security headers
-/*.html
-  X-Frame-Options: DENY
-  X-Content-Type-Options: nosniff
-  Referrer-Policy: strict-origin-when-cross-origin
-
-# API proxy (for Cloudflare Pages)
-/api/*
-  Access-Control-Allow-Origin: *

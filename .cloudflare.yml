@@ -1,5 +1,0 @@
-name: Portfolio
-type: astro
-build:
-  command: cd frontend && npm install && npm run build
-  output: frontend/dist

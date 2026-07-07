@@ -24,14 +24,9 @@ const { title, description } = Astro.props;
   <body>
     <div class="grid-bg"></div>
     <script>
-      // API base URL - auto-detects dev vs production
-      (function() {
-        var host = window.location.hostname;
-        var isDev = host === 'localhost' || host === '127.0.0.1';
-        // Set your Render backend URL here after deployment
-        window.API_BASE = isDev ? 'http://localhost:8000' : 'https://portfolio-api.onrender.com';
-        window.API_READY = true;
-      })();
+      // API base URL - connects to local FastAPI backend
+      window.API_BASE = 'http://localhost:8000';
+      window.API_READY = true;
 
       // Load avatar from backend API (runs on every page)
       (function() {
