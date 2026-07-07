@@ -121,26 +121,37 @@
       backdrop-filter: blur(20px);
       padding: 20px;
       gap: 5px;
-      transform: translateY(-110%);
-      transition: var(--transition);
       border-bottom: 1px solid var(--border-color);
       z-index: 999;
-      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
     }
 
     .nav-links.active {
-      transform: translateY(0);
-      pointer-events: auto;
+      opacity: 1;
+      visibility: visible;
     }
 
     .nav-link {
       width: 100%;
       text-align: center;
-      padding: 12px;
+      padding: 14px;
+      font-size: 1rem;
+      color: var(--text-primary);
+    }
+
+    .nav-links li {
+      width: 100%;
     }
 
     .nav-logo {
       font-size: 1.1rem;
+    }
+
+    .nav-toggle span {
+      width: 26px;
+      height: 2.5px;
     }
   }
 
@@ -156,8 +167,12 @@
       padding: 16px;
     }
     .nav-link {
-      padding: 10px;
-      font-size: 0.85rem;
+      padding: 12px;
+      font-size: 0.9rem;
+    }
+    .nav-toggle span {
+      width: 24px;
+      height: 2px;
     }
   }
 </style>
