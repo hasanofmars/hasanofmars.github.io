@@ -1,0 +1,169 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import BlogCard from '../components/BlogCard.astro';
+import posts from '../data/blog.json';
+
+const categories = ['All', ...new Set(posts.map(p => p.category))];
+---
+
+<Layout title="Blog">
+  <Navbar />
+
+  <section class="page-header">
+    <div class="container">
+      <h1 class="page-title">My <span class="gradient-text">Blog</span></h1>
+      <p class="page-desc">Thoughts on security, development, and building things that matter</p>
+    </div>
+  </section>
+
+  <section class="section blog-section">
+    <div class="container">
+      <div class="filter-tabs" id="filterTabs">
+        {categories.map(cat => (
+          <button class={`filter-btn ${cat === 'All' ? 'active' : ''}`} data-filter={cat}>{cat}</button>
+        ))}
+      </div>
+
+      <div class="blog-grid" id="blogGrid">
+        {posts.map((post, i) => (
+          <div class="blog-wrapper" data-category={post.category}>
+            <BlogCard
+              title={post.title}
+              excerpt={post.excerpt}
+              date={post.date}
+              category={post.category}
+              tags={post.tags}
+              readingTime={post.readingTime}
+              slug={post.slug}
+              featured={post.featured}
+              index={i}
+            />
+          </div>
+        ))}
+      </div>
+
+      {posts.length === 0 && (
+        <div class="blog-empty">
+          <p>No posts yet. Check back soon.</p>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <Footer />
+</Layout>
+
+<style>
+  .page-header {
+    padding: 160px 0 60px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .page-title {
+    font-size: 3rem;
+    margin-bottom: 12px;
+  }
+
+  .page-desc {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    max-width: 500px;
+  }
+
+  .filter-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    padding: 10px 22px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+
+  .filter-btn:hover {
+    border-color: var(--accent-green);
+    color: var(--accent-green);
+  }
+
+  .filter-btn.active {
+    background: var(--accent-green);
+    color: var(--bg-primary);
+    border-color: var(--accent-green);
+    font-weight: 700;
+  }
+
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 24px;
+  }
+
+  .blog-wrapper {
+    transition: var(--transition);
+  }
+
+  .blog-empty {
+    text-align: center;
+    padding: 80px 0;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+  }
+
+  @media (max-width: 1024px) {
+    .page-header { padding: 140px 0 50px; }
+    .blog-grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+  }
+
+  @media (max-width: 768px) {
+    .page-title { font-size: 2.2rem; }
+    .page-desc { font-size: 0.95rem; max-width: 100%; }
+    .blog-grid { grid-template-columns: 1fr; gap: 16px; }
+    .filter-tabs { justify-content: center; gap: 8px; }
+    .filter-btn { padding: 8px 16px; font-size: 0.8rem; }
+    .page-header { padding: 120px 0 40px; }
+  }
+
+  @media (max-width: 480px) {
+    .page-header { padding: 100px 0 28px; }
+    .page-title { font-size: 1.8rem; }
+    .filter-tabs { gap: 6px; }
+    .filter-btn { padding: 6px 12px; font-size: 0.7rem; }
+    .blog-grid { gap: 12px; }
+  }
+</style>
+
+<script>
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const blogWrappers = document.querySelectorAll('.blog-wrapper');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const filter = btn.dataset.filter;
+      blogWrappers.forEach(wrapper => {
+        if (filter === 'All' || (wrapper as HTMLElement).dataset.category === filter) {
+          (wrapper as HTMLElement).style.display = 'block';
+          (wrapper as HTMLElement).style.animation = 'none';
+          (wrapper as HTMLElement).offsetHeight;
+          (wrapper as HTMLElement).style.animation = 'fadeInUp 0.4s ease forwards';
+        } else {
+          (wrapper as HTMLElement).style.display = 'none';
+        }
+      });
+    });
+  });
+</script>

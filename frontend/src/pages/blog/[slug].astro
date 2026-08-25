@@ -1,0 +1,303 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import posts from '../../data/blog.json';
+
+export function getStaticPaths() {
+  return posts.map(post => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+
+const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+
+const currentIndex = posts.findIndex(p => p.slug === post.slug);
+const prevPost = currentIndex < posts.length - 1 ? posts[currentIndex + 1] : null;
+const nextPost = currentIndex > 0 ? posts[currentIndex - 1] : null;
+---
+
+<Layout title={post.title} description={post.excerpt}>
+  <Navbar />
+
+  <article class="blog-post">
+    <header class="post-header">
+      <div class="container">
+        <a href="/blog" class="post-back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Back to Blog
+        </a>
+        <div class="post-meta">
+          <span class="post-category">{post.category}</span>
+          <span class="post-date">{formattedDate}</span>
+          <span class="post-dot">·</span>
+          <span class="post-reading-time">{post.readingTime}</span>
+        </div>
+        <h1 class="post-title">{post.title}</h1>
+        <div class="post-tags">
+          {post.tags.map(tag => <span class="post-tag">{tag}</span>)}
+        </div>
+      </div>
+    </header>
+
+    <div class="post-body">
+      <div class="container">
+        <div class="post-content" set:html={post.content} />
+      </div>
+    </div>
+
+    <footer class="post-footer">
+      <div class="container">
+        <div class="post-nav">
+          {prevPost && (
+            <a href={`/blog/${prevPost.slug}`} class="post-nav-link post-nav-prev">
+              <span class="post-nav-label">← Previous</span>
+              <span class="post-nav-title">{prevPost.title}</span>
+            </a>
+          )}
+          {nextPost && (
+            <a href={`/blog/${nextPost.slug}`} class="post-nav-link post-nav-next">
+              <span class="post-nav-label">Next →</span>
+              <span class="post-nav-title">{nextPost.title}</span>
+            </a>
+          )}
+        </div>
+      </div>
+    </footer>
+  </article>
+
+  <Footer />
+</Layout>
+
+<style>
+  .blog-post {
+    padding-top: 70px;
+  }
+
+  .post-header {
+    padding: 80px 0 60px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .post-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 32px;
+    transition: var(--transition);
+  }
+
+  .post-back:hover {
+    color: var(--accent-green);
+  }
+
+  .post-back svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .post-category {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--accent-green);
+    background: rgba(0, 255, 65, 0.08);
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 255, 65, 0.15);
+  }
+
+  .post-date,
+  .post-reading-time {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .post-dot {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+
+  .post-title {
+    font-size: 2.8rem;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 24px;
+    max-width: 800px;
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .post-tag {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    background: rgba(148, 163, 184, 0.08);
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+  }
+
+  .post-body {
+    padding: 60px 0;
+  }
+
+  .post-content {
+    max-width: 740px;
+  }
+
+  .post-content :global(h2) {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin: 48px 0 16px;
+    color: var(--text-primary);
+  }
+
+  .post-content :global(p) {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+
+  .post-content :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: var(--bg-card);
+    color: var(--accent-cyan);
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+  }
+
+  .post-content :global(pre) {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    overflow-x: auto;
+    margin: 24px 0;
+  }
+
+  .post-content :global(pre code) {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--text-primary);
+  }
+
+  .post-content :global(ul),
+  .post-content :global(ol) {
+    margin: 16px 0;
+    padding-left: 24px;
+  }
+
+  .post-content :global(li) {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    line-height: 1.8;
+    margin-bottom: 8px;
+  }
+
+  .post-content :global(blockquote) {
+    border-left: 3px solid var(--accent-green);
+    padding: 16px 24px;
+    margin: 24px 0;
+    background: rgba(0, 255, 65, 0.03);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+
+  .post-content :global(blockquote p) {
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  .post-footer {
+    padding: 40px 0;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .post-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .post-nav-link {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    transition: var(--transition);
+    text-decoration: none;
+  }
+
+  .post-nav-link:hover {
+    border-color: var(--accent-green);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-green);
+  }
+
+  .post-nav-next {
+    text-align: right;
+  }
+
+  .post-nav-label {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent-green);
+    font-weight: 600;
+  }
+
+  .post-nav-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.4;
+  }
+
+  @media (max-width: 768px) {
+    .post-header { padding: 60px 0 40px; }
+    .post-title { font-size: 2rem; }
+    .post-body { padding: 40px 0; }
+    .post-content :global(h2) { font-size: 1.3rem; }
+    .post-content :global(p),
+    .post-content :global(li) { font-size: 0.95rem; }
+    .post-nav { grid-template-columns: 1fr; }
+    .post-nav-next { text-align: left; }
+  }
+
+  @media (max-width: 480px) {
+    .post-header { padding: 40px 0 28px; }
+    .post-title { font-size: 1.6rem; }
+    .post-meta { gap: 6px; }
+    .post-body { padding: 28px 0; }
+  }
+</style>
