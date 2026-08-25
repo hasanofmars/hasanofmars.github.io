@@ -6,7 +6,11 @@ import profile from '../data/profile.json';
 import contact from '../data/contact.json';
 ---
 
-<Layout title="Contact">
+<Layout
+  title="Contact"
+  description="Get in touch with M Hasan for cybersecurity consulting, secure web development, penetration testing, or project collaboration."
+  canonical="https://hasanofmars.github.io/contact/"
+>
   <Navbar />
 
   <section class="page-header">
@@ -48,7 +52,7 @@ import contact from '../data/contact.json';
               </div>
               <div>
                 <h4>GitHub</h4>
-                <a href={contact.social.github} target="_blank">{contact.social.github.replace('https://', '')}</a>
+                <a href={contact.social.github} target="_blank" rel="noopener">{contact.social.github.replace('https://', '')}</a>
               </div>
             </div>
           </div>

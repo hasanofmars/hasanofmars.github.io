@@ -22,25 +22,38 @@ const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
 const currentIndex = posts.findIndex(p => p.slug === post.slug);
 const prevPost = currentIndex < posts.length - 1 ? posts[currentIndex + 1] : null;
 const nextPost = currentIndex > 0 ? posts[currentIndex - 1] : null;
+
+const relatedPosts = posts
+  .filter(p => p.slug !== post.slug && (p.category === post.category || p.tags.some(t => post.tags.includes(t))))
+  .slice(0, 2);
+
+const canonicalUrl = `https://hasanofmars.github.io/blog/${post.slug}/`;
 ---
 
-<Layout title={post.title} description={post.excerpt}>
+<Layout
+  title={post.title}
+  description={post.excerpt}
+  canonical={canonicalUrl}
+  ogType="article"
+  articleDate={post.date}
+  articleTags={post.tags}
+>
   <Navbar />
 
-  <article class="blog-post">
+  <article class="blog-post" itemscope itemtype="https://schema.org/Article">
     <header class="post-header">
       <div class="container">
-        <a href="/blog" class="post-back">
+        <a href="/blog/" class="post-back">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
           Back to Blog
         </a>
         <div class="post-meta">
-          <span class="post-category">{post.category}</span>
-          <span class="post-date">{formattedDate}</span>
+          <span class="post-category" itemprop="articleSection">{post.category}</span>
+          <time class="post-date" datetime={post.date} itemprop="datePublished">{formattedDate}</time>
           <span class="post-dot">·</span>
           <span class="post-reading-time">{post.readingTime}</span>
         </div>
-        <h1 class="post-title">{post.title}</h1>
+        <h1 class="post-title" itemprop="headline">{post.title}</h1>
         <div class="post-tags">
           {post.tags.map(tag => <span class="post-tag">{tag}</span>)}
         </div>
@@ -49,21 +62,39 @@ const nextPost = currentIndex > 0 ? posts[currentIndex - 1] : null;
 
     <div class="post-body">
       <div class="container">
-        <div class="post-content" set:html={post.content} />
+        <div class="post-content" itemprop="articleBody" set:html={post.content} />
       </div>
     </div>
+
+    {relatedPosts.length > 0 && (
+      <section class="related-posts">
+        <div class="container">
+          <h2 class="related-title">Related Posts</h2>
+          <div class="related-grid">
+            {relatedPosts.map(rp => (
+              <a href={`/blog/${rp.slug}/`} class="related-card">
+                <span class="related-category">{rp.category}</span>
+                <h3>{rp.title}</h3>
+                <p>{rp.excerpt}</p>
+                <span class="related-read">Read more →</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
 
     <footer class="post-footer">
       <div class="container">
         <div class="post-nav">
           {prevPost && (
-            <a href={`/blog/${prevPost.slug}`} class="post-nav-link post-nav-prev">
+            <a href={`/blog/${prevPost.slug}/`} class="post-nav-link post-nav-prev">
               <span class="post-nav-label">← Previous</span>
               <span class="post-nav-title">{prevPost.title}</span>
             </a>
           )}
           {nextPost && (
-            <a href={`/blog/${nextPost.slug}`} class="post-nav-link post-nav-next">
+            <a href={`/blog/${nextPost.slug}/`} class="post-nav-link post-nav-next">
               <span class="post-nav-label">Next →</span>
               <span class="post-nav-title">{nextPost.title}</span>
             </a>
@@ -236,6 +267,77 @@ const nextPost = currentIndex > 0 ? posts[currentIndex - 1] : null;
     font-style: italic;
   }
 
+  /* Related Posts */
+  .related-posts {
+    padding: 60px 0;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+  }
+
+  .related-title {
+    font-size: 1.5rem;
+    margin-bottom: 24px;
+  }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+  }
+
+  .related-card {
+    display: block;
+    padding: 28px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    transition: var(--transition);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .related-card:hover {
+    border-color: var(--accent-green);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-green);
+  }
+
+  .related-category {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--accent-green);
+    background: rgba(0, 255, 65, 0.08);
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 255, 65, 0.15);
+    margin-bottom: 12px;
+    display: inline-block;
+  }
+
+  .related-card h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+
+  .related-card p {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  .related-read {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent-green);
+  }
+
+  /* Post Footer Nav */
   .post-footer {
     padding: 40px 0;
     border-top: 1px solid var(--border-color);
@@ -292,6 +394,7 @@ const nextPost = currentIndex > 0 ? posts[currentIndex - 1] : null;
     .post-content :global(li) { font-size: 0.95rem; }
     .post-nav { grid-template-columns: 1fr; }
     .post-nav-next { text-align: left; }
+    .related-grid { grid-template-columns: 1fr; }
   }
 
   @media (max-width: 480px) {

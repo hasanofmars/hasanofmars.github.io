@@ -8,7 +8,11 @@ import posts from '../data/blog.json';
 const categories = ['All', ...new Set(posts.map(p => p.category))];
 ---
 
-<Layout title="Blog">
+<Layout
+  title="Blog"
+  description="Technical articles on Linux, cybersecurity, penetration testing, system administration, and secure development by M Hasan."
+  canonical="https://hasanofmars.github.io/blog/"
+>
   <Navbar />
 
   <section class="page-header">

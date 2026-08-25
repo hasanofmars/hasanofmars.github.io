@@ -4,9 +4,64 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description?: string;
+  canonical?: string;
+  ogImage?: string;
+  ogType?: string;
+  articleDate?: string;
+  articleTags?: string[];
 }
 
-const { title, description } = Astro.props;
+const {
+  title,
+  description = 'M Hasan - Full Stack Developer & Cybersecurity Expert. Building secure, scalable web applications and protecting digital infrastructure.',
+  canonical,
+  ogImage = '/images/profile.jpg',
+  ogType = 'website',
+  articleDate,
+  articleTags = [],
+} = Astro.props;
+
+const siteName = 'M Hasan';
+const fullTitle = `${title} | ${siteName}`;
+const pageUrl = canonical || Astro.url.href;
+const imageUrl = ogImage.startsWith('http') ? ogImage : `https://hasanofmars.github.io${ogImage}`;
+
+const jsonLd = ogType === 'article'
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: title,
+      description: description,
+      author: {
+        '@type': 'Person',
+        name: 'M Hasan',
+        url: 'https://hasanofmars.github.io/about/',
+      },
+      publisher: {
+        '@type': 'Person',
+        name: 'M Hasan',
+      },
+      datePublished: articleDate,
+      dateModified: articleDate,
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': pageUrl,
+      },
+      image: imageUrl,
+      keywords: articleTags.join(', '),
+    }
+  : {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: siteName,
+      url: 'https://hasanofmars.github.io',
+      description: 'Full Stack Developer & Cybersecurity Expert portfolio',
+      author: {
+        '@type': 'Person',
+        name: 'M Hasan',
+        url: 'https://hasanofmars.github.io/about/',
+      },
+    };
 ---
 
 <!DOCTYPE html>
@@ -14,18 +69,45 @@ const { title, description } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title} | M Hasan</title>
-    <meta name="description" content={description || "M Hasan - Full Stack Developer & Cybersecurity Expert"} />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={pageUrl} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="google-site-verification" content="llnU3fienjUAa3IF3srIvWAX4q_LtJaEeCk97KX4brE" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:locale" content="en_US" />
+    {articleDate && <meta property="article:published_time" content={articleDate} />}
+    {articleDate && <meta property="article:modified_time" content={articleDate} />}
+    {articleTags.length > 0 && articleTags.map(tag => <meta property="article:tag" content={tag} />)}
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={pageUrl} />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+    <meta name="twitter:creator" content="@mhasan" />
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- RSS -->
+    <link rel="alternate" type="application/rss+xml" title="M Hasan Blog" href="/rss.xml" />
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
   <body>
     <div class="grid-bg"></div>
-    <script>
-      // No backend API needed — all data comes from JSON files at build time
-    </script>
     <slot />
   </body>
 </html>

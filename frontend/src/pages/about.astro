@@ -7,7 +7,11 @@ import skills from '../data/skills.json';
 import profile from '../data/profile.json';
 ---
 
-<Layout title="About">
+<Layout
+  title="About"
+  description="Learn about M Hasan — Full Stack Developer and Cybersecurity Expert with 5+ years of experience in secure web development, penetration testing, and digital forensics."
+  canonical="https://hasanofmars.github.io/about/"
+>
   <Navbar />
 
   <section class="page-header">
@@ -24,7 +28,7 @@ import profile from '../data/profile.json';
         <div class="bio-image-wrapper">
           <div class="bio-image-placeholder">
             <div class="avatar-frame">
-              <img src={profile.avatar_url} alt={profile.name} class="avatar-img" />
+              <img src={profile.avatar_url} alt="M Hasan - Full Stack Developer and Cybersecurity Expert" class="avatar-img" width="200" height="200" />
               <div class="avatar-ring"></div>
             </div>
           </div>
@@ -42,18 +46,18 @@ import profile from '../data/profile.json';
         <div class="bio-content">
           <h2>Cybersecurity Expert & <span class="gradient-text">Full Stack Developer</span></h2>
           <p>
-            I'm <strong>M Hasan</strong>, a passionate Full Stack Developer and Cybersecurity Expert based in <strong>Dhaka, Bangladesh</strong>. 
-            With over 5 years of experience in the field, I specialize in building secure, scalable web applications 
+            I'm <strong>M Hasan</strong>, a passionate Full Stack Developer and Cybersecurity Expert based in <strong>Dhaka, Bangladesh</strong>.
+            With over 5 years of experience in the field, I specialize in building secure, scalable web applications
             and protecting digital infrastructure from emerging threats.
           </p>
           <p>
-            My journey began with a curiosity about how things work on the internet, which led me to dive deep 
-            into both web development and cybersecurity. I believe that security should never be an afterthought — 
+            My journey began with a curiosity about how things work on the internet, which led me to dive deep
+            into both web development and cybersecurity. I believe that security should never be an afterthought —
             it should be integrated into every layer of application development.
           </p>
           <p>
-            When I'm not coding or conducting security audits, I contribute to open-source security tools, 
-            write about cybersecurity best practices, and mentor aspiring developers in the Bangladeshi tech community.
+            When I'm not coding or conducting security audits, I contribute to open-source security tools,
+            write about <a href="/blog/">cybersecurity best practices</a>, and mentor aspiring developers in the Bangladeshi tech community.
           </p>
           <div class="bio-stats-row">
             <div class="bio-stat">

@@ -25,7 +25,11 @@ function getIconSvg(icon) {
 }
 ---
 
-<Layout title="Home">
+<Layout
+  title="Home"
+  description="M Hasan - Full Stack Developer & Cybersecurity Expert. Building secure, scalable web applications and protecting digital infrastructure in Dhaka, Bangladesh."
+  canonical="https://hasanofmars.github.io/"
+>
   <Navbar />
 
   <!-- Hero Section -->
@@ -47,8 +51,8 @@ function getIconSvg(icon) {
             {homepage.hero_description}
           </p>
           <div class="hero-actions">
-            <a href="/projects" class="btn btn-primary">View Projects</a>
-            <a href="/contact" class="btn btn-outline">Contact Me</a>
+            <a href="/projects/" class="btn btn-primary">View Projects</a>
+            <a href="/contact/" class="btn btn-outline">Contact Me</a>
           </div>
           <div class="hero-stats">
             {homepage.stats.map(stat => (
@@ -61,7 +65,7 @@ function getIconSvg(icon) {
         </div>
         <div class="hero-avatar-wrapper">
           <div class="hero-avatar-frame">
-            <img src={profile.avatar_url} alt={profile.name} class="hero-avatar-img" />
+            <img src={profile.avatar_url} alt="M Hasan - Full Stack Developer and Cybersecurity Expert" class="hero-avatar-img" width="260" height="260" loading="eager" />
             <div class="hero-avatar-ring"></div>
           </div>
           <div class="hero-avatar-glow"></div>
@@ -101,7 +105,7 @@ function getIconSvg(icon) {
         ))}
       </div>
       <div class="text-center" style="text-align:center;margin-top:40px;">
-        <a href="/projects" class="btn btn-outline">View All Projects →</a>
+        <a href="/projects/" class="btn btn-outline">View All Projects →</a>
       </div>
     </div>
   </section>
